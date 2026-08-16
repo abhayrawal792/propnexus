@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { notifyOwner } from "../_core/notification";
+import { sendOwnerInquiryEmail } from "../_core/email";
 import { z } from "zod";
 import { isSchemaUnavailable, supabaseRest } from "../supabase";
 import { publicProcedure, router } from "../_core/trpc";
@@ -28,15 +29,22 @@ export const inquiriesRouter = router({
         }),
       });
       let ownerAlertSent = false;
+      let emailAlertSent = false;
+      const alertContent = `Property ID: ${input.propertyId}\nName: ${input.name}\nPhone: ${input.phone}\nEmail: ${input.email || "Not provided"}\nMessage: ${input.message}`;
       try {
         ownerAlertSent = await notifyOwner({
           title: `New PropNexus inquiry from ${input.name}`,
-          content: `Property ID: ${input.propertyId}\nName: ${input.name}\nPhone: ${input.phone}\nEmail: ${input.email || "Not provided"}\nMessage: ${input.message}`,
+          content: alertContent,
         });
       } catch (notificationError) {
         console.warn("[Inquiry] Owner alert unavailable; inquiry was still saved", notificationError);
       }
-      return { success: true, ownerAlertSent };
+      try {
+        emailAlertSent = await sendOwnerInquiryEmail(input);
+      } catch (emailError) {
+        console.warn("[Inquiry] Secondary email alert unavailable; inquiry was still saved", emailError);
+      }
+      return { success: true, ownerAlertSent, emailAlertSent };
     } catch (error) {
       if (isSchemaUnavailable(error)) {
         throw new TRPCError({ code: "PRECONDITION_FAILED", message: "The inquiry database is awaiting Supabase schema activation." });

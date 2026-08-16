@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
   supabaseRest: vi.fn(),
   storagePut: vi.fn(),
   notifyOwner: vi.fn(),
+  sendOwnerInquiryEmail: vi.fn(),
 }));
 
 vi.mock("./supabase", () => ({
@@ -19,6 +20,10 @@ vi.mock("./storage", () => ({
 
 vi.mock("./_core/notification", () => ({
   notifyOwner: mocks.notifyOwner,
+}));
+
+vi.mock("./_core/email", () => ({
+  sendOwnerInquiryEmail: mocks.sendOwnerInquiryEmail,
 }));
 
 import { appRouter } from "./routers";
@@ -167,6 +172,7 @@ describe("PropNexus workflows", () => {
     expect(landing).toContain('id="suggested-location"');
     expect(landing).toContain('id="suggested-price"');
     expect(inquiries).toContain("notifyOwner");
+    expect(inquiries).toContain("sendOwnerInquiryEmail");
     expect(detail).toContain('fetchPriority="high"');
     expect(detail).toContain('role="dialog"');
     expect(map).toContain("Map view is temporarily unavailable");
@@ -182,16 +188,19 @@ describe("PropNexus workflows", () => {
   it("creates an inquiry, saves the expected Supabase payload, and alerts the owner", async () => {
     mocks.supabaseRest.mockResolvedValueOnce(undefined);
     mocks.notifyOwner.mockResolvedValueOnce(true);
+    mocks.sendOwnerInquiryEmail.mockResolvedValueOnce(true);
     const result = await appRouter.createCaller(context("user")).inquiries.create({ propertyId: dbProperty.id, name: "Prospective Buyer", phone: "+9779769279600", email: "buyer@example.com", message: "Please arrange a viewing." });
-    expect(result).toEqual({ success: true, ownerAlertSent: true });
+    expect(result).toEqual({ success: true, ownerAlertSent: true, emailAlertSent: true });
     expect(mocks.supabaseRest).toHaveBeenCalledWith("inquiries", expect.objectContaining({ method: "POST", body: expect.stringContaining("property_id") }));
     expect(mocks.notifyOwner).toHaveBeenCalledWith(expect.objectContaining({ title: expect.stringContaining("Prospective Buyer"), content: expect.stringContaining("buyer@example.com") }));
+    expect(mocks.sendOwnerInquiryEmail).toHaveBeenCalledWith(expect.objectContaining({ name: "Prospective Buyer", email: "buyer@example.com" }));
   });
 
   it("keeps a saved inquiry successful when the owner alert channel is unavailable", async () => {
     mocks.supabaseRest.mockResolvedValueOnce(undefined);
     mocks.notifyOwner.mockResolvedValueOnce(false);
-    await expect(appRouter.createCaller(context("user")).inquiries.create({ propertyId: dbProperty.id, name: "Alert Fallback", phone: "+9779769279600", email: "", message: "Please call me back." })).resolves.toEqual({ success: true, ownerAlertSent: false });
+    mocks.sendOwnerInquiryEmail.mockResolvedValueOnce(false);
+    await expect(appRouter.createCaller(context("user")).inquiries.create({ propertyId: dbProperty.id, name: "Alert Fallback", phone: "+9779769279600", email: "", message: "Please call me back." })).resolves.toEqual({ success: true, ownerAlertSent: false, emailAlertSent: false });
   });
 
   it("updates a lead status from the protected owner inbox", async () => {
