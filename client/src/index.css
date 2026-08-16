@@ -175,3 +175,56 @@
     }
   }
 }
+
+/* PropNexus brand overrides */
+:root {
+  --primary: oklch(0.31 0.055 250);
+  --primary-foreground: oklch(0.97 0.015 90);
+  --sidebar: oklch(0.22 0.035 250);
+  --sidebar-foreground: oklch(0.94 0.018 88);
+  --sidebar-accent: oklch(0.3 0.045 250);
+  --sidebar-accent-foreground: oklch(0.97 0.02 88);
+  --sidebar-primary: oklch(0.72 0.105 78);
+  --sidebar-primary-foreground: oklch(0.2 0.035 250);
+  --sidebar-border: oklch(0.34 0.035 250);
+  --sidebar-ring: oklch(0.72 0.105 78);
+  --radius: 0.9rem;
+}
+
+.dark {
+  --background: oklch(0.18 0.035 250);
+  --foreground: oklch(0.94 0.018 88);
+  --card: oklch(0.23 0.035 250);
+  --card-foreground: oklch(0.94 0.018 88);
+  --popover: oklch(0.23 0.035 250);
+  --popover-foreground: oklch(0.94 0.018 88);
+  --secondary: oklch(0.28 0.04 250);
+  --secondary-foreground: oklch(0.88 0.025 88);
+  --muted: oklch(0.28 0.032 250);
+  --muted-foreground: oklch(0.72 0.02 88);
+  --accent: oklch(0.72 0.105 78);
+  --accent-foreground: oklch(0.2 0.035 250);
+  --border: oklch(0.94 0.018 88 / 12%);
+  --input: oklch(0.94 0.018 88 / 14%);
+  --ring: oklch(0.72 0.105 78);
+}
+
+@layer base { body { font-family: "Manrope", sans-serif; text-rendering: optimizeLegibility; } }
+@layer utilities {
+  .font-display { font-family: "Playfair Display", Georgia, serif; }
+  .eyebrow { font-size: .63rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; }
+  .catalog-label { display: block; font-size: .63rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: #5f6b79; }
+  .detail-label { display: block; font-size: .62rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.58); }
+  .detail-input { margin-top: .45rem; width: 100%; border-radius: .7rem; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.07); padding: .7rem .8rem; font-size: .8rem; color: white; outline: none; transition: border-color .18s ease, background .18s ease; }
+  .detail-input::placeholder { color: rgba(255,255,255,.36); }
+  .detail-input:focus { border-color: #d7b16c; background: rgba(255,255,255,.11); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}

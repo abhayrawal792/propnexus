@@ -21,15 +21,16 @@ import {
 } from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users } from "lucide-react";
+import { Building2, Inbox, LayoutDashboard, LogOut, PanelLeft } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Page 1", path: "/" },
-  { icon: Users, label: "Page 2", path: "/some-path" },
+  { icon: LayoutDashboard, label: "Overview", path: "/admin" },
+  { icon: Building2, label: "Properties", path: "/admin/properties" },
+  { icon: Inbox, label: "Inquiries", path: "/admin/leads" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
@@ -168,8 +169,8 @@ function DashboardLayoutContent({
               </button>
               {!isCollapsed ? (
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="font-semibold tracking-tight truncate">
-                    Navigation
+                    <span className="font-display font-semibold tracking-tight truncate">
+                      PropNexus
                   </span>
                 </div>
               ) : null}
