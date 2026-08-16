@@ -44,3 +44,49 @@ test("favorites persist across navigation and can be cleared", async ({ page }) 
   await page.getByRole("button", { name: /Clear 1 saved property/ }).click();
   await expect(page.getByText("No properties match this search.")).toBeVisible();
 });
+
+
+test("mobile Contact Abhay opens a validated modal and prepares WhatsApp handoff", async ({ page }) => {
+  await page.goto("/");
+  await page.getByLabel("Open navigation menu").click();
+  await page.getByRole("button", { name: "Contact Abhay" }).click();
+  const dialog = page.getByRole("dialog", { name: "Contact Abhay" });
+  await expect(dialog).toBeVisible();
+  await dialog.getByLabel("Name").fill("Test Visitor");
+  await dialog.getByLabel("Phone").fill("+977 9800000000");
+  await dialog.getByLabel("What are you looking for?").fill("A house in Kathmandu.");
+  await dialog.getByRole("button", { name: /Continue on WhatsApp/ }).click();
+  await expect(dialog.getByText("Your conversation is ready.")).toBeVisible();
+});
+
+test("homepage suggested properties switch between list and map modes", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto("/");
+  const mapButton = page.getByRole("button", { name: "Map" });
+  await mapButton.click();
+  await expect(mapButton).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByText("Suggested locations")).toBeVisible();
+  const listButton = page.getByRole("button", { name: "List" });
+  await listButton.click();
+  await expect(listButton).toHaveAttribute("aria-pressed", "true");
+});
+
+
+test("mobile section links smoothly reveal their homepage destinations", async ({ page }) => {
+  await page.goto("/");
+  await page.getByLabel("Open navigation menu").click();
+  await page.getByRole("link", { name: "Why PropNexus" }).click();
+  await expect(page.locator("#why-propnexus")).toBeInViewport();
+  await page.getByLabel("Open navigation menu").click();
+  await page.getByRole("link", { name: "Contact" }).click();
+  await expect(page.getByRole("contentinfo")).toBeInViewport();
+});
+
+
+test("homepage map view explains when the maps service is unavailable", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.route("**/maps/api/js**", route => route.abort());
+  await page.goto("/");
+  await page.getByRole("button", { name: "Map" }).click();
+  await expect(page.getByText("Map view is temporarily unavailable")).toBeVisible({ timeout: 10_000 });
+});

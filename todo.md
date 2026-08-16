@@ -55,3 +55,11 @@
 
 - [x] Make the opened mobile menu fully opaque with readable navy, ivory, and gold styling.
 - [x] Verify the corrected mobile menu visually and through interaction tests.
+
+- [x] Package the PropNexus workflow into a reusable Manus skill using skill-creator.
+- [x] Add smooth scrolling for mobile-menu section links.
+- [x] Add a Contact Abhay popup form modal from the mobile menu.
+- [x] Add a suggested-properties list/map toggle on the homepage.
+- [x] Validate skill package, website tests, and updated interactions before checkpoint.
+
+- [x] Add and verify a visible fallback when the homepage map service cannot load.

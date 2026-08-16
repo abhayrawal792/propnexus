@@ -76,7 +76,8 @@
 
 /// <reference types="@types/google.maps" />
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { MapPin } from "lucide-react";
 import { usePersistFn } from "@/hooks/usePersistFn";
 import { cn } from "@/lib/utils";
 
@@ -93,18 +94,21 @@ const FORGE_BASE_URL =
 const MAPS_PROXY_URL = `${FORGE_BASE_URL}/v1/maps/proxy`;
 
 function loadMapScript() {
-  return new Promise(resolve => {
+  return new Promise<void>((resolve, reject) => {
+    if (window.google?.maps) {
+      resolve();
+      return;
+    }
+    if (!API_KEY) {
+      reject(new Error("Maps configuration is unavailable"));
+      return;
+    }
     const script = document.createElement("script");
     script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
     script.async = true;
     script.crossOrigin = "anonymous";
-    script.onload = () => {
-      resolve(null);
-      script.remove(); // Clean up immediately
-    };
-    script.onerror = () => {
-      console.error("Failed to load Google Maps script");
-    };
+    script.onload = () => { resolve(); script.remove(); };
+    script.onerror = () => { script.remove(); reject(new Error("Failed to load Google Maps")); };
     document.head.appendChild(script);
   });
 }
@@ -124,24 +128,26 @@ export function MapView({
 }: MapViewProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<google.maps.Map | null>(null);
+  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
 
   const init = usePersistFn(async () => {
-    await loadMapScript();
-    if (!mapContainer.current) {
-      console.error("Map container not found");
-      return;
-    }
-    map.current = new window.google.maps.Map(mapContainer.current, {
-      zoom: initialZoom,
-      center: initialCenter,
-      mapTypeControl: true,
-      fullscreenControl: true,
-      zoomControl: true,
-      streetViewControl: true,
-      mapId: "DEMO_MAP_ID",
-    });
-    if (onMapReady) {
-      onMapReady(map.current);
+    try {
+      await loadMapScript();
+      if (!mapContainer.current || !window.google?.maps) throw new Error("Map container is unavailable");
+      map.current = new window.google.maps.Map(mapContainer.current, {
+        zoom: initialZoom,
+        center: initialCenter,
+        mapTypeControl: true,
+        fullscreenControl: true,
+        zoomControl: true,
+        streetViewControl: true,
+        mapId: "DEMO_MAP_ID",
+      });
+      setStatus("ready");
+      onMapReady?.(map.current);
+    } catch (error) {
+      console.warn("[Map] Map unavailable", error);
+      setStatus("error");
     }
   });
 
@@ -150,6 +156,9 @@ export function MapView({
   }, [init]);
 
   return (
-    <div ref={mapContainer} className={cn("w-full h-[500px]", className)} />
+    <div className={cn("relative w-full h-[500px]", className)}>
+      <div ref={mapContainer} className="absolute inset-0" />
+      {status !== "ready" && <div className="absolute inset-0 grid place-items-center bg-[#e7e1d5] p-6 text-center"><div className="max-w-sm rounded-2xl border border-[#10243a]/10 bg-[#f8f5ee] px-6 py-7 shadow-lg"><MapPin className="mx-auto h-7 w-7 text-[#a67e35]" /><p className="mt-4 font-display text-2xl text-[#10243a]">{status === "loading" ? "Loading the property map" : "Map view is temporarily unavailable"}</p><p className="mt-2 text-sm leading-6 text-slate-600">{status === "loading" ? "Preparing locations across Nepal." : "You can still explore the same properties in list view."}</p></div></div>}
+    </div>
   );
 }

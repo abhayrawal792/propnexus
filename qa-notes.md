@@ -21,3 +21,7 @@ The interaction update passed `pnpm check` and the full Vitest suite, including 
 Playwright browser verification completed the interaction pass. The mobile menu opened, closed, and navigated to both the catalogue and saved-properties view; homepage search carried the selected type, location, budget, and sort fields into the catalogue URL; and a saved property persisted through reload, appeared in the saved-only view, and could be cleared from the visible catalog controls.
 
 The mobile-menu opacity fix was visually re-captured after the final CSS update. The opened menu now presents a fully opaque navy viewport and panel, with readable Discover, Browse properties, Saved properties, Why PropNexus, Contact, and Contact Abhay controls; no homepage content shows through the overlay. The Playwright mobile navigation test also passes.
+
+## Enhancement verification
+
+The mobile menu now smooth-scrolls to the homepage Why PropNexus and footer contact sections after the overlay closes. Contact Abhay opens an accessible modal with required name, phone, and message validation, then prepares a WhatsApp handoff and success state. Suggested properties support list/map switching with marker navigation; when the maps service is blocked or unavailable, the map view visibly explains the limitation and points visitors back to list view. The expanded browser suite covers all of these flows.

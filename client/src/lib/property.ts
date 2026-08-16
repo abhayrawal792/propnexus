@@ -74,3 +74,16 @@ export function getSimilarProperties(property: Property, allProperties: Property
     .slice(0, limit)
     .map(({ candidate }) => candidate);
 }
+
+
+const NEPAL_LOCATION_COORDINATES: Array<[RegExp, { lat: number; lng: number }]> = [
+  [/kathmandu|budhanilkantha|maharajgunj|kirtipur|bhaisepati|tokha/i, { lat: 27.7172, lng: 85.3240 }],
+  [/chitwan|bharatpur/i, { lat: 27.5291, lng: 84.3542 }],
+  [/pokhara/i, { lat: 28.2096, lng: 83.9856 }],
+  [/lalitpur|patan/i, { lat: 27.6588, lng: 85.3247 }],
+];
+
+export function getPropertyCoordinates(property: Pick<Property, "location" | "city">) {
+  const query = `${property.location} ${property.city}`;
+  return NEPAL_LOCATION_COORDINATES.find(([pattern]) => pattern.test(query))?.[1] ?? { lat: 27.7172, lng: 85.3240 };
+}
