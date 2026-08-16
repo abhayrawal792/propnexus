@@ -104,4 +104,4 @@
 - [x] Add a read-only mode for shared wishlist links that hides all modification controls.
 - [x] Add a branded PropNexus header and contact footer to the comparison PDF print layout.
 - [x] Add zoom-aware clustering for nearby catalogue map markers.
-- [ ] Add or update tests, verify responsive behavior, and save a new checkpoint.
+- [x] Add or update tests, verify responsive behavior, and save a new checkpoint.
