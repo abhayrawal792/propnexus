@@ -114,6 +114,10 @@
 - [x] Add an optional custom personal message field to comparison-PDF emails.
 - [x] Make cluster clicks automatically zoom and expand into individual property markers.
 - [x] Add a recently viewed properties section to the wishlist using privacy-conscious browser storage.
-- [ ] Run a comprehensive regression test covering every existing and newly requested feature, then save a checkpoint.
+- [x] Run a comprehensive regression test covering every existing and newly requested feature, then save a checkpoint.
 - [x] Refactor cluster expansion to use stable property-member IDs across zoom recalculations.
 - [x] Verify via browser that clicking a cluster renders multiple individual property markers, not only a higher zoom.
+- [x] Expand final browser regression to cover inquiry submission, mobile navigation, favorites mutations, wishlist sorting/filtering, comparison selection/removal, PDF export trigger, shared read-only mode, marker hover, cluster average/expansion, and recently viewed persistence.
+- [x] Save a fresh checkpoint after the expanded regression and responsive verification pass.
+- [x] Re-run desktop and mobile responsive verification after the final cluster-expansion changes and expanded regression pass.
+- [x] Save a new checkpoint after final responsive verification and expanded regression completion.
