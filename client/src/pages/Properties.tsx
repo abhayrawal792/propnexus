@@ -26,9 +26,9 @@ function createPropertyMarkerContent(property: Property) {
   return root;
 }
 
-function createClusterMarkerContent(count: number) {
+function createClusterMarkerContent(count: number, averagePrice: string) {
   const root = document.createElement("div");
-  root.textContent = `${count} properties`;
+  root.textContent = `${count} properties · Avg ${averagePrice}`;
   root.style.cssText = "display:grid;place-items:center;min-width:82px;height:42px;padding:0 10px;background:#d7b16c;color:#10243a;border:2px solid #0b1c2f;border-radius:999px;font:800 11px/1 ui-sans-serif,system-ui;white-space:nowrap;box-shadow:0 5px 16px rgba(8,23,41,.28);cursor:pointer;";
   return root;
 }
@@ -48,7 +48,7 @@ function setupClusteredMarkers(map: google.maps.Map, properties: Property[], nav
     markers = Array.from(groups.values()).map(group => {
       const first = group[0];
       const coordinates = group.reduce((center, property) => { const point = getPropertyCoordinates(property); return { lat: center.lat + point.lat / group.length, lng: center.lng + point.lng / group.length }; }, { lat: 0, lng: 0 });
-      const content = group.length === 1 ? createPropertyMarkerContent(first) : createClusterMarkerContent(group.length);
+      const averagePrice = formatNpr(group.reduce((total, property) => total + property.price, 0) / group.length, group.every(property => property.listingType === "Rent") ? "Rent" : "Sale"); const content = group.length === 1 ? createPropertyMarkerContent(first) : createClusterMarkerContent(group.length, averagePrice);
       const marker = new window.google.maps.marker.AdvancedMarkerElement({ map, position: coordinates, title: group.length === 1 ? `${first.title} — ${formatNpr(first.price, first.listingType)}` : `${group.length} nearby properties`, content });
       marker.addListener("click", () => { if (group.length === 1) navigate(`/properties/${first.slug}`); else { map.setZoom(Math.min((map.getZoom() ?? 11) + 2, 18)); map.panTo(coordinates); } });
       return marker;

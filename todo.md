@@ -105,3 +105,8 @@
 - [x] Add a branded PropNexus header and contact footer to the comparison PDF print layout.
 - [x] Add zoom-aware clustering for nearby catalogue map markers.
 - [x] Add or update tests, verify responsive behavior, and save a new checkpoint.
+
+- [x] Add a welcome banner explaining that shared wishlist recipients are viewing a curated property list.
+- [x] Display the average price of grouped properties on map cluster icons.
+- [x] Add a comparison PDF email form with recipient validation and a no-cost delivery path.
+- [ ] Add or update tests, verify responsive behavior, and save a new checkpoint.
