@@ -9,8 +9,8 @@ test("mobile menu opens, closes, and reaches public destinations", async ({ page
 
   await page.goBack();
   await page.getByLabel("Open navigation menu").click();
-  await page.getByRole("link", { name: /Saved properties/ }).click();
-  await expect(page).toHaveURL(/\/properties\?favorites=1$/);
+  await page.getByRole("link", { name: "Wishlist" }).click();
+  await expect(page).toHaveURL(/\/wishlist$/);
 
   await page.goBack();
   await page.getByLabel("Open navigation menu").click();

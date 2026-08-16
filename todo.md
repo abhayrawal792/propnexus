@@ -126,3 +126,13 @@
 - [x] Add an Add to Wishlist action directly inside map marker hover previews.
 - [x] Highlight key differences between selected properties in the comparison workspace.
 - [x] Add regression coverage, verify responsive behavior, and save an updated checkpoint.
+
+- [x] Run the final all-feature regression, including TypeScript, Vitest, browser flows, and responsive checks.
+- [ ] Inspect the connected GitHub repository and push the verified PropNexus project.
+- [ ] Save a final checkpoint after the successful regression and GitHub push.
+- [x] Update the legacy mobile navigation browser assertion to target the current dedicated Wishlist route and label.
+- [ ] Re-run desktop and mobile responsive verification after the final browser regression and Wishlist selector fix.
+
+- [ ] Verify the connected GitHub repository push, branch, latest commit, and clean status.
+- [ ] Run the comprehensive TypeScript, Vitest, Playwright, and responsive verification suite.
+- [ ] Generate a summary report covering implemented features, test results, and any remaining operational notes.
