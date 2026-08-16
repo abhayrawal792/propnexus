@@ -37,7 +37,7 @@ function buildComparisonPdf(properties: ComparisonPropertyEmail[]): Promise<Buff
   });
 }
 
-export async function sendComparisonPdfEmail(recipient: string, properties: ComparisonPropertyEmail[]): Promise<boolean> {
+export async function sendComparisonPdfEmail(recipient: string, properties: ComparisonPropertyEmail[], personalMessage?: string): Promise<boolean> {
   if (!ENV.smtpUser || !ENV.smtpPass || !ENV.ownerAlertEmail) return false;
   const pdf = await buildComparisonPdf(properties);
   const transport = nodemailer.createTransport({ host: ENV.smtpHost, port: ENV.smtpPort, secure: ENV.smtpPort === 465, auth: { user: ENV.smtpUser, pass: ENV.smtpPass } });
@@ -46,7 +46,7 @@ export async function sendComparisonPdfEmail(recipient: string, properties: Comp
     to: recipient,
     replyTo: ENV.ownerAlertEmail,
     subject: `PropNexus property comparison · ${properties.length} saved ${properties.length === 1 ? "property" : "properties"}`,
-    text: "Attached is your PropNexus property comparison brief. Contact Abhay at +977 9769279600 for current availability and viewings.",
+    text: [personalMessage?.trim() ? `Personal message from the sender:\n${personalMessage.trim()}` : "", "Attached is your PropNexus property comparison brief.", "Contact Abhay at +977 9769279600 for current availability and viewings."].filter(Boolean).join("\n\n"),
     attachments: [{ filename: "propnexus-property-comparison.pdf", content: pdf, contentType: "application/pdf" }],
   });
   return true;

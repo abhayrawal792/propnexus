@@ -152,7 +152,7 @@ describe("PropNexus workflows", () => {
 
   it("retains the required public accessibility safeguards in key route sources", async () => {
     const root = new URL("../", import.meta.url);
-      const [header, landing, catalogue, detail, stylesheet, inquiries, map, wishlist, comparisonRouter] = await Promise.all([
+      const [header, landing, catalogue, detail, stylesheet, inquiries, map, wishlist, comparisonRouter, recentHook] = await Promise.all([
       readFile(new URL("client/src/components/PublicHeader.tsx", root), "utf8"),
       readFile(new URL("client/src/pages/Landing.tsx", root), "utf8"),
       readFile(new URL("client/src/pages/Properties.tsx", root), "utf8"),
@@ -162,6 +162,7 @@ describe("PropNexus workflows", () => {
         readFile(new URL("client/src/components/Map.tsx", root), "utf8"),
         readFile(new URL("client/src/pages/Wishlist.tsx", root), "utf8"),
       readFile(new URL("server/routers/comparison.ts", root), "utf8"),
+      readFile(new URL("client/src/hooks/useRecentlyViewed.ts", root), "utf8"),
     ]);
     expect(header).toContain('href="#main-content"');
     expect(header).toContain("setMenuOpen(true)");
@@ -178,6 +179,7 @@ describe("PropNexus workflows", () => {
     expect(catalogue).toContain("createClusterMarkerContent");
     expect(catalogue).toContain("averagePrice");
     expect(catalogue).toContain("Avg");
+    expect(catalogue).toContain("expandedPropertyIds");
     expect(catalogue).toContain("zoom_changed");
     expect(catalogue).toContain("formatNpr");
     expect(detail).toContain("Loading property image");
@@ -201,11 +203,16 @@ describe("PropNexus workflows", () => {
     expect(wishlist).toContain("curated list of properties");
     expect(wishlist).toContain("Email PDF");
     expect(wishlist).toContain("comparison-email");
+    expect(wishlist).toContain("personalMessage");
+    expect(wishlist).toContain("recentlyViewedIds");
+    expect(recentHook).toContain("RECENTLY_VIEWED_STORAGE_KEY");
+    expect(recentHook).toContain("addRecentlyViewed");
     expect(wishlist).toContain("rawalabhaya!@gmail.com");
     expect(wishlist).toContain("print-only");
     expect(wishlist).toContain("Export comparison PDF");
     expect(stylesheet).toContain("#comparison-print-area");
     expect(comparisonRouter).toContain("emailPdf");
+    expect(comparisonRouter).toContain("personalMessage");
     expect(catalogue).toContain("createPropertyMarkerContent");
     expect(catalogue).toContain("mouseenter");
   });

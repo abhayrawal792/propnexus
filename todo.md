@@ -110,3 +110,10 @@
 - [x] Display the average price of grouped properties on map cluster icons.
 - [x] Add a comparison PDF email form with recipient validation and a no-cost delivery path.
 - [x] Add or update tests, verify responsive behavior, and save a new checkpoint.
+
+- [x] Add an optional custom personal message field to comparison-PDF emails.
+- [x] Make cluster clicks automatically zoom and expand into individual property markers.
+- [x] Add a recently viewed properties section to the wishlist using privacy-conscious browser storage.
+- [ ] Run a comprehensive regression test covering every existing and newly requested feature, then save a checkpoint.
+- [x] Refactor cluster expansion to use stable property-member IDs across zoom recalculations.
+- [x] Verify via browser that clicking a cluster renders multiple individual property markers, not only a higher zoom.

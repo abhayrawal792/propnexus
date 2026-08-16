@@ -35,6 +35,7 @@ function createClusterMarkerContent(count: number, averagePrice: string) {
 
 function setupClusteredMarkers(map: google.maps.Map, properties: Property[], navigate: (path: string) => void) {
   let markers: google.maps.marker.AdvancedMarkerElement[] = [];
+  const expandedPropertyIds = new Set<string>();
   const render = () => {
     markers.forEach(marker => { marker.map = null; });
     const zoom = map.getZoom() ?? 11;
@@ -45,12 +46,17 @@ function setupClusteredMarkers(map: google.maps.Map, properties: Property[], nav
       const key = `${Math.round(coordinate.lat / cellSize)}:${Math.round(coordinate.lng / cellSize)}`;
       groups.set(key, [...(groups.get(key) ?? []), property]);
     });
-    markers = Array.from(groups.values()).map(group => {
+    const renderGroups: Array<{ key: string; group: Property[] }> = [];
+    groups.forEach((group, key) => {
+      if (group.length > 1 && group.some(property => expandedPropertyIds.has(property.id))) group.forEach(property => renderGroups.push({ key: `${key}:${property.id}`, group: [property] }));
+      else renderGroups.push({ key, group });
+    });
+    markers = renderGroups.map(({ key: groupKey, group }) => {
       const first = group[0];
       const coordinates = group.reduce((center, property) => { const point = getPropertyCoordinates(property); return { lat: center.lat + point.lat / group.length, lng: center.lng + point.lng / group.length }; }, { lat: 0, lng: 0 });
       const averagePrice = formatNpr(group.reduce((total, property) => total + property.price, 0) / group.length, group.every(property => property.listingType === "Rent") ? "Rent" : "Sale"); const content = group.length === 1 ? createPropertyMarkerContent(first) : createClusterMarkerContent(group.length, averagePrice);
       const marker = new window.google.maps.marker.AdvancedMarkerElement({ map, position: coordinates, title: group.length === 1 ? `${first.title} — ${formatNpr(first.price, first.listingType)}` : `${group.length} nearby properties`, content });
-      marker.addListener("click", () => { if (group.length === 1) navigate(`/properties/${first.slug}`); else { map.setZoom(Math.min((map.getZoom() ?? 11) + 2, 18)); map.panTo(coordinates); } });
+      marker.addListener("click", () => { if (group.length === 1) navigate(`/properties/${first.slug}`); else { group.forEach(property => expandedPropertyIds.add(property.id)); map.setZoom(Math.min((map.getZoom() ?? 11) + 3, 18)); map.panTo(coordinates); render(); } });
       return marker;
     });
   };

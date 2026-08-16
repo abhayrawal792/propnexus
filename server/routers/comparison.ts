@@ -15,9 +15,9 @@ const comparisonProperty = z.object({
 });
 
 export const comparisonRouter = router({
-  emailPdf: publicProcedure.input(z.object({ recipient: z.string().email(), properties: z.array(comparisonProperty).min(1).max(3) })).mutation(async ({ input }) => {
+  emailPdf: publicProcedure.input(z.object({ recipient: z.string().email(), personalMessage: z.string().trim().max(1000).optional(), properties: z.array(comparisonProperty).min(1).max(3) })).mutation(async ({ input }) => {
     try {
-      const sent = await sendComparisonPdfEmail(input.recipient, input.properties);
+      const sent = await sendComparisonPdfEmail(input.recipient, input.properties, input.personalMessage);
       if (!sent) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Comparison email is not configured yet. Add the optional SMTP settings to enable PDF delivery." });
       return { success: true } as const;
     } catch (error) {

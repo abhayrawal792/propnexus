@@ -7,6 +7,7 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import { Link, useRoute } from "wouter";
 import PropertyCard from "@/components/PropertyCard";
 import { useFavorites } from "@/hooks/useFavorites";
+import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
 
 const whatsappNumber = "9779769279600";
 
@@ -17,6 +18,7 @@ export default function PropertyDetail() {
   const property = detailQuery.data as Property | undefined;
   const allPropertiesQuery = trpc.properties.list.useQuery();
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { addRecentlyViewed } = useRecentlyViewed();
   const [activeImage, setActiveImage] = useState(0);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -31,6 +33,7 @@ export default function PropertyDetail() {
   const similarProperties = useMemo(() => property ? getSimilarProperties(property, (allPropertiesQuery.data ?? []) as Property[]) : [], [property, allPropertiesQuery.data]);
 
   useEffect(() => setActiveImage(0), [detailQuery.data?.id]);
+  useEffect(() => { if (property?.id) addRecentlyViewed(property.id); }, [property?.id, addRecentlyViewed]);
   useEffect(() => {
     setActiveImage(current => Math.min(current, Math.max(safeImages.length - 1, 0)));
   }, [safeImages.length]);
