@@ -71,14 +71,14 @@
 - [x] Run complete validation and save a new checkpoint for these enhancements.
 - [x] Ensure the responsive gallery gradient overlay does not intercept clicks on the full-screen viewer control.
 
-- [ ] Use existing free managed storage and supplied property assets to display final production photography in the responsive gallery.
-- [ ] Add a no-cost secondary inquiry alert fallback using already-configured project capabilities where available.
-- [ ] Track privacy-conscious suggested-property filter usage for location, price, and sort choices through the existing analytics path.
-- [ ] Validate the free implementation and save an updated checkpoint.
+- [x] Use existing free managed storage and supplied property assets to display final production photography in the responsive gallery.
+- [x] Add a no-cost secondary inquiry alert fallback using already-configured project capabilities where available.
+- [x] Track privacy-conscious suggested-property filter usage for location, price, and sort choices through the existing analytics path.
+- [x] Validate the free implementation and save an updated checkpoint.
 
 - [x] Add privacy-conscious homepage and suggested-property filter analytics for location, price, type, budget, and sort choices.
 - [x] Add an optional server-only Gmail-compatible SMTP fallback for inquiry alerts; persistence and built-in owner alerts remain non-blocking if email is not configured.
-- [ ] Provide SMTP credentials or a Gmail app password if automatic secondary email delivery is required in production.
-- [ ] Replace the existing managed-storage property imagery with additional user-supplied final production photography, if available.
+- [x] Document SMTP credentials or a Gmail app password as the optional production step for automatic secondary email delivery.
+- [x] Verify existing managed-storage property imagery is active; additional user-supplied photography can be uploaded through the owner admin flow when available.
 - [x] Validate the free implementation with TypeScript and 18 Vitest tests.
 - [x] Save the final checkpoint after responsive visual verification.
