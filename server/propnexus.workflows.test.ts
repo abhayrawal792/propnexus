@@ -173,7 +173,9 @@ describe("PropNexus workflows", () => {
     expect(landing).toContain('id="suggested-location"');
     expect(catalogue).toContain('aria-label="Property catalogue view"');
     expect(catalogue).toContain("MapView");
-    expect(catalogue).toContain("markerContent");
+    expect(catalogue).toContain("createPropertyMarkerContent");
+    expect(catalogue).toContain("createClusterMarkerContent");
+    expect(catalogue).toContain("zoom_changed");
     expect(catalogue).toContain("formatNpr");
     expect(detail).toContain("Loading property image");
     expect(detail).toContain("animate-pulse");
@@ -191,9 +193,13 @@ describe("PropNexus workflows", () => {
     expect(wishlist).toContain("compareIds");
     expect(wishlist).toContain("shareWishlist");
     expect(wishlist).toContain("wishlist=");
+    expect(wishlist).toContain("isReadOnlyShared");
+    expect(wishlist).toContain("read-only viewing");
+    expect(wishlist).toContain("rawalabhaya!@gmail.com");
+    expect(wishlist).toContain("print-only");
     expect(wishlist).toContain("Export comparison PDF");
     expect(stylesheet).toContain("#comparison-print-area");
-    expect(catalogue).toContain("previewImage");
+    expect(catalogue).toContain("createPropertyMarkerContent");
     expect(catalogue).toContain("mouseenter");
   });
 

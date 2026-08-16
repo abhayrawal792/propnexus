@@ -100,3 +100,8 @@
 - [x] Add a browser-side PDF export button for the selected property comparison details.
 - [x] Add map marker hover previews with a property image, price, location, and basic details.
 - [x] Add or update tests and verify responsive share, export, and map-preview interactions before saving a checkpoint.
+
+- [x] Add a read-only mode for shared wishlist links that hides all modification controls.
+- [x] Add a branded PropNexus header and contact footer to the comparison PDF print layout.
+- [x] Add zoom-aware clustering for nearby catalogue map markers.
+- [ ] Add or update tests, verify responsive behavior, and save a new checkpoint.

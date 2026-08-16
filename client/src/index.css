@@ -229,9 +229,12 @@
   }
 }
 
+.print-only { display: none; }
+
 @media print {
   body * { visibility: hidden !important; }
   #comparison-print-area, #comparison-print-area * { visibility: visible !important; }
+  #comparison-print-area .print-only { display: flex !important; }
   #comparison-print-area { position: absolute !important; inset: 0 !important; width: 100% !important; margin: 0 !important; border: 0 !important; border-radius: 0 !important; background: white !important; color: #10243a !important; box-shadow: none !important; }
   #comparison-print-area button, #comparison-print-area a { display: none !important; }
   #comparison-print-area [class*="text-white"] { color: #10243a !important; }
