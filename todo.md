@@ -52,3 +52,6 @@
 - [x] Verify menu open/close and navigation destinations at mobile size before saving the checkpoint.
 - [x] Fix mobile navigation overlay stacking so its links receive taps above the page content.
 - [x] Re-run persisted-favorites interaction verification with a stable property control selector.
+
+- [x] Make the opened mobile menu fully opaque with readable navy, ivory, and gold styling.
+- [x] Verify the corrected mobile menu visually and through interaction tests.
