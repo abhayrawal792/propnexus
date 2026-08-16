@@ -88,3 +88,10 @@
 - [x] Add a loading skeleton animation for property gallery images while they load.
 - [x] Add or update Vitest coverage for wishlist, listings map, and gallery loading states.
 - [x] Verify the new features at desktop and mobile sizes and save an updated checkpoint.
+
+- [x] Add wishlist sorting and filtering by price and listing date.
+- [x] Display each property price directly on interactive map markers.
+- [x] Add side-by-side comparison for multiple wishlist properties with selectable entries.
+- [x] Add or update Vitest coverage and verify responsive interactions before saving a checkpoint.
+- [x] Run browser-level interaction checks for wishlist sorting, comparison selection/removal, and catalogue map price-label behavior.
+- [x] Explicitly verify a rendered map marker price label, or confirm the map fallback when the map service is unavailable.

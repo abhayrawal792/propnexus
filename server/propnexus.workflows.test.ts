@@ -173,6 +173,8 @@ describe("PropNexus workflows", () => {
     expect(landing).toContain('id="suggested-location"');
     expect(catalogue).toContain('aria-label="Property catalogue view"');
     expect(catalogue).toContain("MapView");
+    expect(catalogue).toContain("markerContent");
+    expect(catalogue).toContain("formatNpr");
     expect(detail).toContain("Loading property image");
     expect(detail).toContain("animate-pulse");
     expect(landing).toContain('id="suggested-price"');
@@ -183,6 +185,10 @@ describe("PropNexus workflows", () => {
     expect(map).toContain("Map view is temporarily unavailable");
     expect(wishlist).toContain("Your wishlist is waiting.");
     expect(wishlist).toContain("clearFavorites");
+    expect(wishlist).toContain('id="wishlist-sort"');
+    expect(wishlist).toContain('id="wishlist-price"');
+    expect(wishlist).toContain("Compare saved properties");
+    expect(wishlist).toContain("compareIds");
   });
 
   it("maps Supabase properties for public property discovery", async () => {
