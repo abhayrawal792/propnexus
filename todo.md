@@ -121,3 +121,8 @@
 - [x] Save a fresh checkpoint after the expanded regression and responsive verification pass.
 - [x] Re-run desktop and mobile responsive verification after the final cluster-expansion changes and expanded regression pass.
 - [x] Save a new checkpoint after final responsive verification and expanded regression completion.
+
+- [x] Add timestamps and a Clear History control to recently viewed properties.
+- [x] Add an Add to Wishlist action directly inside map marker hover previews.
+- [x] Highlight key differences between selected properties in the comparison workspace.
+- [x] Add regression coverage, verify responsive behavior, and save an updated checkpoint.

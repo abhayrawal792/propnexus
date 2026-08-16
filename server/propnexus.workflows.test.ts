@@ -204,9 +204,14 @@ describe("PropNexus workflows", () => {
     expect(wishlist).toContain("Email PDF");
     expect(wishlist).toContain("comparison-email");
     expect(wishlist).toContain("personalMessage");
-    expect(wishlist).toContain("recentlyViewedIds");
+    expect(wishlist).toContain("recentlyViewedEntries");
+    expect(wishlist).toContain("Clear history");
+    expect(wishlist).toContain("Viewed");
+    expect(wishlist).toContain("differenceKeys");
     expect(recentHook).toContain("RECENTLY_VIEWED_STORAGE_KEY");
     expect(recentHook).toContain("addRecentlyViewed");
+    expect(recentHook).toContain("clearRecentlyViewed");
+    expect(recentHook).toContain("viewedAt");
     expect(wishlist).toContain("rawalabhaya!@gmail.com");
     expect(wishlist).toContain("print-only");
     expect(wishlist).toContain("Export comparison PDF");
@@ -215,6 +220,8 @@ describe("PropNexus workflows", () => {
     expect(comparisonRouter).toContain("personalMessage");
     expect(catalogue).toContain("createPropertyMarkerContent");
     expect(catalogue).toContain("mouseenter");
+    expect(catalogue).toContain("Add to wishlist");
+    expect(catalogue).toContain("onToggleFavorite");
   });
 
   it("maps Supabase properties for public property discovery", async () => {
