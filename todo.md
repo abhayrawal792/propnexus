@@ -95,3 +95,8 @@
 - [x] Add or update Vitest coverage and verify responsive interactions before saving a checkpoint.
 - [x] Run browser-level interaction checks for wishlist sorting, comparison selection/removal, and catalogue map price-label behavior.
 - [x] Explicitly verify a rendered map marker price label, or confirm the map fallback when the map service is unavailable.
+
+- [x] Add shareable wishlist links that encode saved property IDs and restore them on the wishlist page.
+- [x] Add a browser-side PDF export button for the selected property comparison details.
+- [x] Add map marker hover previews with a property image, price, location, and basic details.
+- [x] Add or update tests and verify responsive share, export, and map-preview interactions before saving a checkpoint.

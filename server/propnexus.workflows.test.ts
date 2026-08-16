@@ -189,6 +189,12 @@ describe("PropNexus workflows", () => {
     expect(wishlist).toContain('id="wishlist-price"');
     expect(wishlist).toContain("Compare saved properties");
     expect(wishlist).toContain("compareIds");
+    expect(wishlist).toContain("shareWishlist");
+    expect(wishlist).toContain("wishlist=");
+    expect(wishlist).toContain("Export comparison PDF");
+    expect(stylesheet).toContain("#comparison-print-area");
+    expect(catalogue).toContain("previewImage");
+    expect(catalogue).toContain("mouseenter");
   });
 
   it("maps Supabase properties for public property discovery", async () => {

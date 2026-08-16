@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export const FAVORITES_STORAGE_KEY = "propnexus-saved-property-ids";
-const CHANGE_EVENT = "propnexus-favorites-change";
+export const FAVORITES_CHANGE_EVENT = "propnexus-favorites-change";
 
 export function parseFavoriteIds(value: string | null) {
   try {
@@ -31,10 +31,10 @@ export function useFavorites() {
   useEffect(() => {
     const sync = () => setFavoriteIds(readFavorites());
     window.addEventListener("storage", sync);
-    window.addEventListener(CHANGE_EVENT, sync);
+    window.addEventListener(FAVORITES_CHANGE_EVENT, sync);
     return () => {
       window.removeEventListener("storage", sync);
-      window.removeEventListener(CHANGE_EVENT, sync);
+      window.removeEventListener(FAVORITES_CHANGE_EVENT, sync);
     };
   }, []);
 
@@ -42,14 +42,14 @@ export function useFavorites() {
     setFavoriteIds(current => {
       const next = current.includes(propertyId) ? current.filter(id => id !== propertyId) : [...current, propertyId];
       saveFavoriteIds(window.localStorage, next);
-      window.dispatchEvent(new Event(CHANGE_EVENT));
+      window.dispatchEvent(new Event(FAVORITES_CHANGE_EVENT));
       return next;
     });
   }, []);
 
   const clearFavorites = useCallback(() => {
     window.localStorage.removeItem(FAVORITES_STORAGE_KEY);
-    window.dispatchEvent(new Event(CHANGE_EVENT));
+    window.dispatchEvent(new Event(FAVORITES_CHANGE_EVENT));
     setFavoriteIds([]);
   }, []);
 
