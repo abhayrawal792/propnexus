@@ -17,7 +17,8 @@ vi.mock("./storage", () => ({
 }));
 
 import { appRouter } from "./routers";
-import { resolveGalleryState, sanitizePropertyImages } from "../client/src/lib/property";
+import { getSimilarProperties, resolveGalleryState, sanitizePropertyImages, sortProperties, type Property } from "../client/src/lib/property";
+import { FAVORITES_STORAGE_KEY, parseFavoriteIds, readFavoriteIds, saveFavoriteIds } from "../client/src/hooks/useFavorites";
 
 const dbProperty = {
   id: "9a17b2d1-e5c6-4f22-b891-f5df00000001",
@@ -86,6 +87,32 @@ const propertyInput = {
   published: true,
 };
 
+const clientProperty: Property = {
+  id: dbProperty.id,
+  title: dbProperty.title,
+  slug: dbProperty.slug,
+  description: dbProperty.description,
+  price: dbProperty.price,
+  listingType: "Sale",
+  propertyType: "House",
+  status: "Available",
+  location: dbProperty.location,
+  city: dbProperty.city,
+  areaSize: dbProperty.area_size,
+  bedrooms: dbProperty.bedrooms,
+  bathrooms: dbProperty.bathrooms,
+  floors: dbProperty.floors,
+  parkingSpaces: dbProperty.parking_spaces,
+  roadAccess: dbProperty.road_access,
+  facingDirection: dbProperty.facing_direction,
+  amenities: dbProperty.amenities,
+  imageUrls: dbProperty.image_urls,
+  featuredImage: dbProperty.featured_image,
+  featured: true,
+  published: true,
+  createdAt: dbProperty.created_at,
+};
+
 describe("PropNexus workflows", () => {
   it("sanitizes malformed gallery data and falls back to a valid featured image", () => {
     expect(sanitizePropertyImages(["", "not-a-url", "/manus-storage/valid.jpg", 7], "https://example.com/fallback.jpg")).toEqual(["/manus-storage/valid.jpg"]);
@@ -93,6 +120,24 @@ describe("PropNexus workflows", () => {
     expect(sanitizePropertyImages(["invalid"], "also-invalid")).toEqual([]);
     expect(resolveGalleryState(["invalid"], "https://example.com/fallback.jpg", 8)).toMatchObject({ images: ["https://example.com/fallback.jpg"], activeIndex: 0, hasNavigation: false });
     expect(resolveGalleryState(["/manus-storage/one.jpg", "/manus-storage/two.jpg"], "", 8)).toMatchObject({ activeIndex: 1, image: "/manus-storage/two.jpg", hasNavigation: true });
+  });
+
+  it("sorts price filters and recommends comparable available properties", () => {
+    const nearby = { ...clientProperty, id: "nearby", title: "Comparable House", slug: "comparable-house", price: 33000000 };
+    const lower = { ...clientProperty, id: "lower", title: "Lower Priced Land", slug: "lower-priced-land", propertyType: "Land" as const, city: "Chitwan", location: "Bharatpur", price: 12000000 };
+    const unavailable = { ...nearby, id: "unavailable", title: "Unavailable House", slug: "unavailable-house", status: "Sold" as const };
+    expect(sortProperties([clientProperty, nearby, lower], "price-low").map(item => item.id)).toEqual(["lower", clientProperty.id, "nearby"]);
+    expect(sortProperties([clientProperty, nearby, lower], "price-high").map(item => item.id)).toEqual(["nearby", clientProperty.id, "lower"]);
+    expect(getSimilarProperties(clientProperty, [clientProperty, lower, unavailable, nearby]).map(item => item.id)).toEqual(["nearby", "lower"]);
+  });
+
+  it("persists saved-property ids through browser storage helpers", () => {
+    const values = new Map<string, string>();
+    const storage = { getItem: (key: string) => values.get(key) ?? null, setItem: (key: string, value: string) => values.set(key, value) };
+    saveFavoriteIds(storage, ["first", "second"]);
+    expect(values.get(FAVORITES_STORAGE_KEY)).toBe('["first","second"]');
+    expect(readFavoriteIds(storage)).toEqual(["first", "second"]);
+    expect(parseFavoriteIds("not-json")).toEqual([]);
   });
 
   it("retains the required public accessibility safeguards in key route sources", async () => {
@@ -105,6 +150,9 @@ describe("PropNexus workflows", () => {
       readFile(new URL("client/src/index.css", root), "utf8"),
     ]);
     expect(header).toContain('href="#main-content"');
+    expect(header).toContain("setMenuOpen(true)");
+    expect(header).toContain("setMenuOpen(false)");
+    expect(header).toContain('href="/properties?favorites=1"');
     expect(landing).toContain('main id="main-content"');
     expect(catalogue).toContain('role="alert"');
     expect(detail).toContain('role="alert"');

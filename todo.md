@@ -34,3 +34,21 @@
 - [x] Add an explicit landing-page query error state and finish final all-route accessibility verification.
 
 - [x] Add executable gallery-state and accessibility source smoke checks, then record final route verification.
+
+- [x] Make homepage advanced search filter and sorting functional for price, location, and property type.
+- [x] Show functional suggested properties on the homepage with working navigation.
+- [x] Repair the mobile three-line menu and verify its links.
+- [x] Add visitor favorites with persistent browser storage and clear saved-state controls.
+- [x] Add similar properties to each property detail page.
+- [x] Remove the supplied logo background for clean transparent placement across the site.
+- [x] Verify all requested interactions and update the project checkpoint.
+
+## Interaction repair notes
+
+- Use stable URL parameters for homepage search handoff and catalog sorting.
+- Keep favorites client-side so visitors can bookmark listings without requiring authentication.
+- Preserve the exact PropNexus brand name and official logo artwork while improving presentation.
+- [x] Add a clear-all control for saved properties and test persisted favorites behavior.
+- [x] Verify menu open/close and navigation destinations at mobile size before saving the checkpoint.
+- [x] Fix mobile navigation overlay stacking so its links receive taps above the page content.
+- [x] Re-run persisted-favorites interaction verification with a stable property control selector.

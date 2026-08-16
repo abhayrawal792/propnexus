@@ -47,3 +47,30 @@ export function resolveGalleryState(imageUrls: unknown, featuredImage: unknown, 
   const index = Math.min(Math.max(activeIndex, 0), Math.max(images.length - 1, 0));
   return { images, activeIndex: index, image: images[index] ?? "", hasNavigation: images.length > 1 };
 }
+
+export type PropertySort = "newest" | "price-low" | "price-high" | "location" | "type";
+
+export function sortProperties(properties: Property[], sort: PropertySort) {
+  return [...properties].sort((left, right) => {
+    if (sort === "price-low") return left.price - right.price;
+    if (sort === "price-high") return right.price - left.price;
+    if (sort === "location") return `${left.city} ${left.location}`.localeCompare(`${right.city} ${right.location}`);
+    if (sort === "type") return left.propertyType.localeCompare(right.propertyType) || left.title.localeCompare(right.title);
+    return new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime();
+  });
+}
+
+export function getSimilarProperties(property: Property, allProperties: Property[], limit = 3) {
+  return allProperties
+    .filter(candidate => candidate.id !== property.id && candidate.published && candidate.status === "Available")
+    .map(candidate => ({
+      candidate,
+      score: (candidate.propertyType === property.propertyType ? 5 : 0)
+        + (candidate.city === property.city ? 3 : 0)
+        + (candidate.listingType === property.listingType ? 2 : 0)
+        - Math.min(Math.abs(candidate.price - property.price) / Math.max(property.price, 1), 1),
+    }))
+    .sort((left, right) => right.score - left.score)
+    .slice(0, limit)
+    .map(({ candidate }) => candidate);
+}
