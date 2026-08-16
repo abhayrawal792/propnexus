@@ -90,3 +90,29 @@ test("homepage map view explains when the maps service is unavailable", async ({
   await page.getByRole("button", { name: "Map" }).click();
   await expect(page.getByText("Map view is temporarily unavailable")).toBeVisible({ timeout: 10_000 });
 });
+
+
+test("homepage suggestions filter by location, price, and sort order", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto("/");
+  await page.locator("#suggested-location").selectOption({ label: "Budhanilkantha" });
+  await page.locator("#suggested-price").selectOption("30000000");
+  await page.locator("#suggested-sort").selectOption("price-low");
+  await expect(page.locator("#suggested-location")).toHaveValue("Budhanilkantha");
+  await expect(page.locator("#suggested-price")).toHaveValue("30000000");
+  await expect(page.locator("#suggested-sort")).toHaveValue("price-low");
+});
+
+test("property photography opens in a responsive full-screen viewer", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/properties");
+  const detailHref = await page.locator("article a").first().getAttribute("href");
+  expect(detailHref).toMatch(/\/properties\//);
+  await page.goto(detailHref!);
+  const openViewer = page.getByRole("button", { name: /Open .* image 1 full screen/ });
+  await expect(openViewer).toBeVisible();
+  await openViewer.click();
+  await expect(page.getByRole("dialog", { name: /photography viewer/ })).toBeVisible();
+  await page.getByRole("button", { name: "Close photography viewer" }).click();
+  await expect(page.getByRole("dialog", { name: /photography viewer/ })).not.toBeVisible();
+});

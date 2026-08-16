@@ -5,6 +5,7 @@ import type { TrpcContext } from "./_core/context";
 const mocks = vi.hoisted(() => ({
   supabaseRest: vi.fn(),
   storagePut: vi.fn(),
+  notifyOwner: vi.fn(),
 }));
 
 vi.mock("./supabase", () => ({
@@ -14,6 +15,10 @@ vi.mock("./supabase", () => ({
 
 vi.mock("./storage", () => ({
   storagePut: mocks.storagePut,
+}));
+
+vi.mock("./_core/notification", () => ({
+  notifyOwner: mocks.notifyOwner,
 }));
 
 import { appRouter } from "./routers";
@@ -142,12 +147,14 @@ describe("PropNexus workflows", () => {
 
   it("retains the required public accessibility safeguards in key route sources", async () => {
     const root = new URL("../", import.meta.url);
-    const [header, landing, catalogue, detail, stylesheet] = await Promise.all([
+    const [header, landing, catalogue, detail, stylesheet, inquiries, map] = await Promise.all([
       readFile(new URL("client/src/components/PublicHeader.tsx", root), "utf8"),
       readFile(new URL("client/src/pages/Landing.tsx", root), "utf8"),
       readFile(new URL("client/src/pages/Properties.tsx", root), "utf8"),
       readFile(new URL("client/src/pages/PropertyDetail.tsx", root), "utf8"),
       readFile(new URL("client/src/index.css", root), "utf8"),
+      readFile(new URL("server/routers/inquiries.ts", root), "utf8"),
+      readFile(new URL("client/src/components/Map.tsx", root), "utf8"),
     ]);
     expect(header).toContain('href="#main-content"');
     expect(header).toContain("setMenuOpen(true)");
@@ -157,6 +164,12 @@ describe("PropNexus workflows", () => {
     expect(catalogue).toContain('role="alert"');
     expect(detail).toContain('role="alert"');
     expect(stylesheet).toContain("prefers-reduced-motion");
+    expect(landing).toContain('id="suggested-location"');
+    expect(landing).toContain('id="suggested-price"');
+    expect(inquiries).toContain("notifyOwner");
+    expect(detail).toContain('fetchPriority="high"');
+    expect(detail).toContain('role="dialog"');
+    expect(map).toContain("Map view is temporarily unavailable");
   });
 
   it("maps Supabase properties for public property discovery", async () => {
@@ -166,11 +179,19 @@ describe("PropNexus workflows", () => {
     expect(result[0]).toMatchObject({ title: dbProperty.title, propertyType: "House", imageUrls: dbProperty.image_urls });
   });
 
-  it("creates an inquiry and sends the expected Supabase payload", async () => {
+  it("creates an inquiry, saves the expected Supabase payload, and alerts the owner", async () => {
     mocks.supabaseRest.mockResolvedValueOnce(undefined);
+    mocks.notifyOwner.mockResolvedValueOnce(true);
     const result = await appRouter.createCaller(context("user")).inquiries.create({ propertyId: dbProperty.id, name: "Prospective Buyer", phone: "+9779769279600", email: "buyer@example.com", message: "Please arrange a viewing." });
-    expect(result).toEqual({ success: true });
+    expect(result).toEqual({ success: true, ownerAlertSent: true });
     expect(mocks.supabaseRest).toHaveBeenCalledWith("inquiries", expect.objectContaining({ method: "POST", body: expect.stringContaining("property_id") }));
+    expect(mocks.notifyOwner).toHaveBeenCalledWith(expect.objectContaining({ title: expect.stringContaining("Prospective Buyer"), content: expect.stringContaining("buyer@example.com") }));
+  });
+
+  it("keeps a saved inquiry successful when the owner alert channel is unavailable", async () => {
+    mocks.supabaseRest.mockResolvedValueOnce(undefined);
+    mocks.notifyOwner.mockResolvedValueOnce(false);
+    await expect(appRouter.createCaller(context("user")).inquiries.create({ propertyId: dbProperty.id, name: "Alert Fallback", phone: "+9779769279600", email: "", message: "Please call me back." })).resolves.toEqual({ success: true, ownerAlertSent: false });
   });
 
   it("updates a lead status from the protected owner inbox", async () => {

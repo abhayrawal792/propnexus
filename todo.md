@@ -63,3 +63,10 @@
 - [x] Validate skill package, website tests, and updated interactions before checkpoint.
 
 - [x] Add and verify a visible fallback when the homepage map service cannot load.
+
+- [x] Send an owner alert when a visitor submits a property inquiry.
+- [x] Add price and location filtering controls to the homepage suggested-properties section.
+- [x] Enhance property detail galleries for high-quality responsive production photography with safe fallbacks.
+- [x] Update and revalidate the reusable PropNexus workflow skill with notification, filtering, and gallery guidance.
+- [x] Run complete validation and save a new checkpoint for these enhancements.
+- [x] Ensure the responsive gallery gradient overlay does not intercept clicks on the full-screen viewer control.

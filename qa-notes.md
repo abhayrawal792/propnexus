@@ -25,3 +25,7 @@ The mobile-menu opacity fix was visually re-captured after the final CSS update.
 ## Enhancement verification
 
 The mobile menu now smooth-scrolls to the homepage Why PropNexus and footer contact sections after the overlay closes. Contact Abhay opens an accessible modal with required name, phone, and message validation, then prepares a WhatsApp handoff and success state. Suggested properties support list/map switching with marker navigation; when the maps service is blocked or unavailable, the map view visibly explains the limitation and points visitors back to list view. The expanded browser suite covers all of these flows.
+
+## Notification, filter, and gallery enhancement verification
+
+Inquiry persistence now triggers a built-in owner notification alert after the Supabase insert. The inquiry remains successful if the notification upstream is unavailable, and both paths are covered by workflow tests. Homepage suggested properties now support independent location, maximum-price, and sort controls. Property detail photography supports eager primary loading, lazy thumbnails, responsive sizing hints, keyboard-accessible full-screen viewing, Escape-to-close, and an empty-gallery fallback. Browser verification passed for suggestion filtering and the responsive viewer after correcting the decorative gradient overlay hit target.
