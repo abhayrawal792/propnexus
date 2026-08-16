@@ -22,7 +22,7 @@
 - [x] Adapt the visual direction using the Novel Masiv reference while preserving the exact PropNexus brand name.
 - [x] Create a curated set of approximately 10–20 editable Nepal property listings rather than the initial four examples.
 - [x] Connect verified Supabase server-side data access for property and inquiry records, while using managed project storage for property images.
-- [ ] Prepare the completed project for GitHub export and provide publishing guidance without deploying on the user’s behalf.
+- [x] Prepare the completed project for GitHub export and provide publishing guidance without deploying on the user’s behalf.
 - [x] Upload and use the supplied official PropNexus Property & Real Estate logo across navigation, footer, and brand touchpoints.
 - [x] Extend the premium design system with the logo’s deep navy, warm gold, and ivory palette.
 - [x] Add Vitest coverage for property data, inquiry creation, lead status transitions, admin property CRUD, and media uploads.
