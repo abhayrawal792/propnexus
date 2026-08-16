@@ -82,3 +82,9 @@
 - [x] Verify existing managed-storage property imagery is active; additional user-supplied photography can be uploaded through the owner admin flow when available.
 - [x] Validate the free implementation with TypeScript and 18 Vitest tests.
 - [x] Save the final checkpoint after responsive visual verification.
+
+- [x] Add a personal wishlist view for saved favorite properties with persistent browser storage.
+- [x] Add an interactive map view to the property listings catalogue with selectable markers and listing navigation.
+- [x] Add a loading skeleton animation for property gallery images while they load.
+- [x] Add or update Vitest coverage for wishlist, listings map, and gallery loading states.
+- [x] Verify the new features at desktop and mobile sizes and save an updated checkpoint.

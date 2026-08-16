@@ -152,30 +152,37 @@ describe("PropNexus workflows", () => {
 
   it("retains the required public accessibility safeguards in key route sources", async () => {
     const root = new URL("../", import.meta.url);
-    const [header, landing, catalogue, detail, stylesheet, inquiries, map] = await Promise.all([
+      const [header, landing, catalogue, detail, stylesheet, inquiries, map, wishlist] = await Promise.all([
       readFile(new URL("client/src/components/PublicHeader.tsx", root), "utf8"),
       readFile(new URL("client/src/pages/Landing.tsx", root), "utf8"),
       readFile(new URL("client/src/pages/Properties.tsx", root), "utf8"),
       readFile(new URL("client/src/pages/PropertyDetail.tsx", root), "utf8"),
       readFile(new URL("client/src/index.css", root), "utf8"),
       readFile(new URL("server/routers/inquiries.ts", root), "utf8"),
-      readFile(new URL("client/src/components/Map.tsx", root), "utf8"),
+        readFile(new URL("client/src/components/Map.tsx", root), "utf8"),
+        readFile(new URL("client/src/pages/Wishlist.tsx", root), "utf8"),
     ]);
     expect(header).toContain('href="#main-content"');
     expect(header).toContain("setMenuOpen(true)");
     expect(header).toContain("setMenuOpen(false)");
-    expect(header).toContain('href="/properties?favorites=1"');
+    expect(header).toContain('href="/wishlist"');
     expect(landing).toContain('main id="main-content"');
     expect(catalogue).toContain('role="alert"');
     expect(detail).toContain('role="alert"');
     expect(stylesheet).toContain("prefers-reduced-motion");
     expect(landing).toContain('id="suggested-location"');
+    expect(catalogue).toContain('aria-label="Property catalogue view"');
+    expect(catalogue).toContain("MapView");
+    expect(detail).toContain("Loading property image");
+    expect(detail).toContain("animate-pulse");
     expect(landing).toContain('id="suggested-price"');
     expect(inquiries).toContain("notifyOwner");
     expect(inquiries).toContain("sendOwnerInquiryEmail");
     expect(detail).toContain('fetchPriority="high"');
     expect(detail).toContain('role="dialog"');
     expect(map).toContain("Map view is temporarily unavailable");
+    expect(wishlist).toContain("Your wishlist is waiting.");
+    expect(wishlist).toContain("clearFavorites");
   });
 
   it("maps Supabase properties for public property discovery", async () => {

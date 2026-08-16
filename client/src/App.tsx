@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import PropertyDetail from "./pages/PropertyDetail";
 import Properties from "./pages/Properties";
+import Wishlist from "./pages/Wishlist";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -17,6 +18,7 @@ function Router() {
       <Route path={"/admin/:section"} component={Admin} />
       <Route path={"/admin"} component={Admin} />
       <Route path={"/properties"} component={Properties} />
+      <Route path={"/wishlist"} component={Wishlist} />
       <Route path={"/properties/:slug"} component={PropertyDetail} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
