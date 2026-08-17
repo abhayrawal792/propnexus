@@ -1,5 +1,7 @@
 import { createApp } from "../../server/_core/index";
 
+export const config = { runtime: "nodejs22.x" };
+
 let appPromise: ReturnType<typeof createApp> | undefined;
 
 export default async function handler(req: any, res: any) {
