@@ -234,3 +234,6 @@
 - [x] Diagnose Vercel inability to access the private GitHub repository and document the required repository/App permission fix.
 
 - [x] Change the PropNexus GitHub repository visibility from private to public for Vercel discovery and verify the result.
+
+- [x] Adapt the Express/tRPC backend for Vercel serverless execution with an exported request handler and preserve the existing local server runtime.
+- [x] Add and validate Vercel configuration for the full-stack build without exposing Supabase secrets.
