@@ -242,4 +242,4 @@
 
 - [x] Diagnose and fix the Vercel deployment bundle if it still starts the local Express listener instead of exporting the serverless handler.
 
-- [ ] Synchronize the corrected Vercel adapter and deployment configuration from the local project to the public GitHub main branch so Vercel stops deploying the stale bundle.
+- [x] Synchronize the corrected Vercel adapter and deployment configuration from the local project to the public GitHub main branch so Vercel stops deploying the stale bundle.
