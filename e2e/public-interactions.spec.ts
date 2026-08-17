@@ -124,15 +124,18 @@ test("property photography opens in a responsive full-screen viewer", async ({ p
 });
 
 
-test("expanded catalogue filters, map view, and detail links work with 16 live listings", async ({ page }) => {
+test("expanded catalogue filters, map view, and detail links work with 20 live listings and city pairs", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto("/properties");
-  await expect(page.getByText("16 considered properties")).toBeVisible();
+  await expect(page.getByText("20 considered properties")).toBeVisible();
   const typeControl = page.getByRole("button", { name: "Apartment", exact: true }).first();
   await typeControl.click();
   await expect(page.getByText("4 considered properties")).toBeVisible();
   await expect(page.locator("article")).toHaveCount(4);
   await page.getByRole("button", { name: "All", exact: true }).first().click();
+  await page.locator("#catalog-location").fill("Pokhara");
+  await expect(page.getByText("2 considered properties")).toBeVisible();
+  await page.locator("#catalog-location").fill("");
   await page.getByRole("button", { name: "Map" }).click();
   await expect(page.getByRole("group", { name: "Property catalogue view" }).getByRole("button", { name: "Map" })).toHaveAttribute("aria-pressed", "true");
   await expect(page.locator('a[href^="/properties/"]')).toHaveCount(6);
