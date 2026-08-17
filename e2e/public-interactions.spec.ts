@@ -193,6 +193,38 @@ test("catalogue comparison workspace caps selection at three and opens side-by-s
   await expect(page.getByRole("heading", { name: "Compare saved properties" })).toBeVisible();
 });
 
+test("AI search provides three example queries and a visible progress state", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("heading", { name: "Tell us what you are looking for." })).toBeVisible({ timeout: 10_000 });
+  const examples = page.getByRole("group", { name: "Example property searches" });
+  await expect(examples.getByRole("button")).toHaveCount(3);
+  await examples.getByRole("button").first().click();
+  await expect(page.locator("#natural-property-search")).toHaveValue(/house in Lalitpur/);
+  await expect(page.getByText("Reading your brief").or(page.getByText(/matching listing|Natural search is temporarily unavailable/))).toBeVisible({ timeout: 20_000 });
+});
+
+test("catalogue saves and reloads the current search criteria locally", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto("/properties");
+  await page.getByRole("button", { name: "Apartment", exact: true }).first().click();
+  await page.getByRole("button", { name: "Save search" }).click();
+  await expect(page.getByText("Saved searches (1)")).toBeVisible();
+  await page.reload();
+  await page.locator("summary").filter({ hasText: "Saved searches" }).click();
+  await expect(page.getByText(/Apartment ·/)).toBeVisible();
+});
+
+test("comparison view copies a shareable comparison link", async ({ page }) => {
+  await page.goto("/properties");
+  const cards = page.locator("article");
+  await cards.nth(0).getByRole("button", { name: "Compare" }).click();
+  await cards.nth(1).getByRole("button", { name: "Compare" }).click();
+  await page.getByRole("button", { name: "Compare side by side" }).click();
+  await expect(page.getByRole("heading", { name: "Compare saved properties" })).toBeVisible();
+  await page.getByRole("button", { name: "Share comparison" }).click();
+  await expect(page.getByRole("button", { name: "Comparison link copied" })).toBeVisible();
+});
+
 test("Why PropNexus from the catalogue returns to the homepage section without blanking", async ({ page }) => {
   await page.goto("/properties");
   await page.setViewportSize({ width: 375, height: 812 });

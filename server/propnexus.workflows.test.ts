@@ -40,6 +40,7 @@ import { appRouter } from "./routers";
 import { getComparisonDifferenceKeys, getSimilarProperties, resolveGalleryState, sanitizePropertyImages, sortProperties, type Property } from "../client/src/lib/property";
 import { FAVORITES_STORAGE_KEY, parseFavoriteIds, readFavoriteIds, saveFavoriteIds } from "../client/src/hooks/useFavorites";
 import { toggleComparisonId } from "../client/src/lib/property";
+import { buildComparisonShareUrl, GUIDED_SEARCH_EXAMPLES, parseComparisonIds, parseSavedSearches, serializeSavedSearches, type SavedSearch } from "../client/src/lib/discovery";
 import { applyFilters, MAX_NATURAL_SEARCH_RESULTS, parseNaturalLanguageFallback } from "./routers/properties";
 
 const dbProperty = {
@@ -342,6 +343,19 @@ describe("PropNexus workflows", () => {
     expect(keys.has("price")).toBe(true);
     expect(keys.has("type")).toBe(true);
     expect(keys.has("area")).toBe(true);
+  });
+
+  it("serializes saved searches and restores a bounded comparison share URL", () => {
+    const saved: SavedSearch = { id: "search-1", label: "Apartment · Kathmandu · Any budget", criteria: { propertyType: "Apartment", listingType: "All", location: "", municipality: "Kathmandu Metropolitan City", ward: "3", roadWidth: "18", price: "all", sort: "newest", onlyFavorites: false } };
+    expect(parseSavedSearches(serializeSavedSearches([saved]))).toEqual([saved]);
+    const url = buildComparisonShareUrl("https://propnexus.example", ["a", "b", "c", "d"]);
+    expect(url).toContain("compare=a%2Cb%2Cc");
+    expect(parseComparisonIds(new URL(url).search)).toEqual(["a", "b", "c"]);
+  });
+
+  it("keeps three guided search examples available as a stable contract", () => {
+    expect(GUIDED_SEARCH_EXAMPLES).toHaveLength(3);
+    expect(GUIDED_SEARCH_EXAMPLES.every(example => example.length > 10)).toBe(true);
   });
 
   it("limits comparison selection to three and supports removal", () => {

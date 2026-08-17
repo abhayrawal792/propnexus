@@ -182,3 +182,16 @@
 - [x] Add Vitest assertions for the natural-language search mutation and comparison difference-highlighting helper.
 - [x] Fix existing favorites regression selector after adding comparison actions to property cards.
 - [x] Correct comparison browser regression to select three enabled listings and verify the fourth is disabled.
+
+## New feature request: guided search, saved searches, and shared comparisons
+
+- [x] Add an animated typing indicator to the AI natural-language search state.
+- [x] Add three clickable example queries that populate or submit the AI search bar.
+- [x] Add Save Search persistence for current catalogue criteria using local storage.
+- [x] Add a Saved Searches section with load and delete actions.
+- [x] Add a Share Comparison action that creates a unique share URL and restores the selected comparison.
+- [x] Add Vitest and Playwright coverage for the three requested enhancements.
+- [x] Add Vitest coverage for saved-search serialization, comparison-share URL generation/restoration, and guided-search example contracts.
+- [x] Run final type, unit, browser, and responsive checks and save a new checkpoint.
+- [x] Stabilize AI example-query browser setup with a rendered-section wait.
+- [x] Set desktop viewport for saved-search browser coverage so catalogue controls are visible.
