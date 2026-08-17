@@ -230,3 +230,7 @@
 - [x] Run final schema, type, unit, browser, build, and responsive checks and save a new checkpoint.
 
 - [ ] Verify Vercel deployment readiness for the full-stack frontend/backend repository while preserving Supabase configuration requirements.
+
+- [ ] Diagnose Vercel inability to access the private GitHub repository and document the required repository/App permission fix.
+
+- [x] Change the PropNexus GitHub repository visibility from private to public for Vercel discovery and verify the result.
