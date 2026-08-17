@@ -258,6 +258,6 @@
 
 - [x] Fix the live Vercel HTTP 500 from the properties API after the explicit serverless routes began resolving.
 
-- [ ] Add a minimal Vercel health endpoint to isolate whether the HTTP 500 is runtime-wide or limited to the tRPC/Supabase path.
+- [x] Add a minimal Vercel health endpoint to isolate whether the HTTP 500 is runtime-wide or limited to the tRPC/Supabase path.
 
-- [ ] Diagnose the tRPC function module-load failure with a temporary protected debug endpoint and remove the diagnostic after identifying the cause.
+- [x] Diagnose the tRPC function module-load failure with a temporary protected debug endpoint and remove the diagnostic after identifying the cause.
