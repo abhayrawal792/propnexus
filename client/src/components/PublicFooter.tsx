@@ -1,7 +1,7 @@
 import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import { Link } from "wouter";
 
-const LOGO_URL = "/manus-storage/propnexus-logo_660454fb.webp";
+const LOGO_URL = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663895754385/loqRpUJbDkCLJjme.webp";
 
 export default function PublicFooter() {
   return (

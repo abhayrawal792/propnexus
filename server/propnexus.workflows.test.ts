@@ -242,7 +242,8 @@ describe("PropNexus workflows", () => {
     mocks.supabaseRest.mockResolvedValueOnce([dbProperty]);
     const result = await appRouter.createCaller(context("user")).properties.list();
     expect(result).toHaveLength(1);
-    expect(result[0]).toMatchObject({ title: dbProperty.title, propertyType: "House", imageUrls: dbProperty.image_urls });
+    expect(result[0]).toMatchObject({ title: dbProperty.title, propertyType: "House" });
+    expect(result[0].imageUrls[0]).toMatch(/^https:\/\/files\.manuscdn\.com\//);
   });
 
   it("forwards a custom personal message when emailing a comparison PDF", async () => {

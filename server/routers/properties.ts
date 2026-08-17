@@ -51,8 +51,30 @@ const filterInput = z.object({
 
 type SupabaseProperty = Record<string, unknown>;
 
+const PUBLIC_PROPERTY_IMAGES = {
+  hero: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663895754385/loHskZvgEyLEslRH.png",
+  apartment: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663895754385/FXiiMBQJhKJhTrAL.jpg",
+  commercial: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663895754385/eHGQGKLqtACbCfkP.jpg",
+  commercialSpace: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663895754385/kThoAqCTJvPzDSFh.jpg",
+  villa: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663895754385/rSrpfvQvsFWXyLAb.jpg",
+} as const;
+
+function toPublicImageUrl(value: string, propertyType?: string): string {
+  if (!value.startsWith("/manus-storage/")) return value;
+  const lower = value.toLowerCase();
+  if (lower.includes("apartment")) return PUBLIC_PROPERTY_IMAGES.apartment;
+  if (lower.includes("commercial-space") || lower.includes("space")) return PUBLIC_PROPERTY_IMAGES.commercialSpace;
+  if (lower.includes("commercial") || lower.includes("office") || lower.includes("building")) return PUBLIC_PROPERTY_IMAGES.commercial;
+  if (propertyType === "Apartment") return PUBLIC_PROPERTY_IMAGES.apartment;
+  if (propertyType === "Commercial") return PUBLIC_PROPERTY_IMAGES.commercial;
+  if (propertyType === "Land") return PUBLIC_PROPERTY_IMAGES.villa;
+  return PUBLIC_PROPERTY_IMAGES.hero;
+}
+
 function mapProperty(row: SupabaseProperty): PropertyRecord {
-  const imageUrls = Array.isArray(row.image_urls) ? row.image_urls.map(String) : Array.isArray(row.imageUrls) ? row.imageUrls.map(String) : [];
+  const propertyType = String(row.property_type || row.propertyType || "House");
+  const rawImageUrls = Array.isArray(row.image_urls) ? row.image_urls.map(String) : Array.isArray(row.imageUrls) ? row.imageUrls.map(String) : [];
+  const imageUrls = rawImageUrls.map(value => toPublicImageUrl(value, propertyType));
   const metadata = resolvePropertyLocationMetadata(String(row.slug || ""), String(row.location || ""), String(row.city || ""), String(row.road_access || ""));
   return {
     id: String(row.id),
@@ -61,7 +83,7 @@ function mapProperty(row: SupabaseProperty): PropertyRecord {
     description: String(row.description || ""),
     price: Number(row.price),
     listingType: row.listing_type as PropertyRecord["listingType"],
-    propertyType: row.property_type as PropertyRecord["propertyType"],
+    propertyType: propertyType as PropertyRecord["propertyType"],
     status: row.status as PropertyRecord["status"],
     location: String(row.location),
     city: String(row.city),
@@ -74,7 +96,7 @@ function mapProperty(row: SupabaseProperty): PropertyRecord {
     facingDirection: String(row.facing_direction || ""),
     amenities: Array.isArray(row.amenities) ? row.amenities.map(String) : [],
     imageUrls,
-    featuredImage: String(row.featured_image || imageUrls[0] || ""),
+    featuredImage: toPublicImageUrl(String(row.featured_image || imageUrls[0] || ""), propertyType),
     featured: Boolean(row.is_featured),
     published: Boolean(row.is_published),
     createdAt: String(row.created_at || new Date().toISOString()),
