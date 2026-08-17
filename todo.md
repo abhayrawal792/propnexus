@@ -241,3 +241,5 @@
 - [x] Document Supabase connection, initial migration, Vercel environment setup, and post-deployment database verification steps for the user.
 
 - [x] Diagnose and fix the Vercel deployment bundle if it still starts the local Express listener instead of exporting the serverless handler.
+
+- [ ] Synchronize the corrected Vercel adapter and deployment configuration from the local project to the public GitHub main branch so Vercel stops deploying the stale bundle.
