@@ -244,6 +244,6 @@
 
 - [x] Synchronize the corrected Vercel adapter and deployment configuration from the local project to the public GitHub main branch so Vercel stops deploying the stale bundle.
 
-- [ ] Diagnose and fix the live Vercel deployment at propnexus-delta.vercel.app so the homepage and API features work correctly.
+- [x] Diagnose and fix the live Vercel deployment at propnexus-delta.vercel.app so the homepage and API features work correctly.
 
-- [ ] Fix the Vercel TypeScript build errors in the catch-all API adapter and Express typings, then push and validate a successful deployment build.
+- [x] Fix the Vercel TypeScript build errors in the catch-all API adapter and Express typings, then push and validate a successful deployment build.
