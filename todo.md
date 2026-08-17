@@ -247,3 +247,7 @@
 - [x] Diagnose and fix the live Vercel deployment at propnexus-delta.vercel.app so the homepage and API features work correctly.
 
 - [x] Fix the Vercel TypeScript build errors in the catch-all API adapter and Express typings, then push and validate a successful deployment build.
+
+- [ ] Fix the remaining Vercel asset delivery failure so the live logo, hero, and property images no longer return 404.
+
+- [ ] Fix the latest Vercel TypeScript errors for Express app methods, response cookies, request headers, and implicit middleware parameters.
