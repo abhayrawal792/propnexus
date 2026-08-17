@@ -228,3 +228,5 @@
 - [x] Add draft, edit, submit, loading, error, and success states to the Contact Agent flow.
 - [x] Add Vitest and Playwright coverage for map toggle, price history, AI drafting, and inquiry submission.
 - [x] Run final schema, type, unit, browser, build, and responsive checks and save a new checkpoint.
+
+- [ ] Verify Vercel deployment readiness for the full-stack frontend/backend repository while preserving Supabase configuration requirements.
