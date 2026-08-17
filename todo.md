@@ -165,3 +165,20 @@
 - [x] Run post-expansion browser regression for catalogue filters, map view, detail links, and wishlist behavior.
 - [x] Add explicit post-expansion wishlist-page verification for saved items, sorting, filtering, and detail navigation.
 - [x] Assert actual wishlist sort order and price-filter result changes with multiple expanded-catalogue properties.
+
+## New feature request: Nepal filters, natural-language search, and comparison
+
+- [x] Add Nepal-specific listing metadata for ward, municipality, and road width with safe Supabase mapping and admin-compatible defaults.
+- [x] Add ward, municipality, and road-width filters to the public homepage/catalogue search, URL state, filtering logic, empty states, and responsive controls.
+- [x] Add a server-side natural-language property-search procedure using the built-in LLM with strict structured output, bounded result IDs, safe fallback behavior, and no client-side secret exposure.
+- [x] Add a conversational search bar that submits natural-language queries, presents interpreted criteria, handles loading/error/empty states, and links results into the existing catalogue.
+- [x] Implement a public comparison workspace that selects up to three listings, supports add/remove/clear actions, highlights differences, and remains usable on mobile.
+- [x] Add Vitest coverage for Nepal metadata/filter helpers, natural-language search parsing/fallbacks, and three-property comparison limits and differences.
+- [x] Add Playwright coverage for Nepal filters, conversational search, comparison selection/removal, and responsive presentation.
+- [x] Run TypeScript, Vitest, Playwright, and desktop/mobile visual checks; save an updated checkpoint.
+- [x] Persist ward, municipality, and road-width fields through property create/update inputs, Supabase payload mapping, and the admin editor.
+- [x] Extend the homepage hero search with ward, municipality, and road-width controls and URL handoff.
+- [x] Cap natural-language search result IDs and returned properties to a documented maximum.
+- [x] Add Vitest assertions for the natural-language search mutation and comparison difference-highlighting helper.
+- [x] Fix existing favorites regression selector after adding comparison actions to property cards.
+- [x] Correct comparison browser regression to select three enabled listings and verify the fourth is disabled.

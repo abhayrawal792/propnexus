@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
   notifyOwner: vi.fn(),
   sendOwnerInquiryEmail: vi.fn(),
   sendComparisonPdfEmail: vi.fn(),
+  invokeLLM: vi.fn(),
 }));
 
 vi.mock("./supabase", () => ({
@@ -31,9 +32,15 @@ vi.mock("./_core/comparisonEmail", () => ({
   sendComparisonPdfEmail: mocks.sendComparisonPdfEmail,
 }));
 
+vi.mock("./_core/llm", () => ({
+  invokeLLM: mocks.invokeLLM,
+}));
+
 import { appRouter } from "./routers";
-import { getSimilarProperties, resolveGalleryState, sanitizePropertyImages, sortProperties, type Property } from "../client/src/lib/property";
+import { getComparisonDifferenceKeys, getSimilarProperties, resolveGalleryState, sanitizePropertyImages, sortProperties, type Property } from "../client/src/lib/property";
 import { FAVORITES_STORAGE_KEY, parseFavoriteIds, readFavoriteIds, saveFavoriteIds } from "../client/src/hooks/useFavorites";
+import { toggleComparisonId } from "../client/src/lib/property";
+import { applyFilters, MAX_NATURAL_SEARCH_RESULTS, parseNaturalLanguageFallback } from "./routers/properties";
 
 const dbProperty = {
   id: "9a17b2d1-e5c6-4f22-b891-f5df00000001",
@@ -307,6 +314,40 @@ describe("PropNexus workflows", () => {
   it("surfaces an inquiry persistence failure to the public caller", async () => {
     mocks.supabaseRest.mockRejectedValueOnce(new Error("Supabase is unavailable"));
     await expect(appRouter.createCaller(context("user")).inquiries.create({ propertyId: dbProperty.id, name: "Prospective Buyer", phone: "+9779769279600", email: "", message: "Please arrange a viewing." })).rejects.toThrow("Supabase is unavailable");
+  });
+
+  it("filters listings by Nepal ward, municipality, and minimum road width", () => {
+    const listing = { ...dbProperty, ward: 3, municipality: "Budhanilkantha Municipality", roadWidth: 18 } as any;
+    expect(applyFilters([listing], { ward: 3, municipality: "Budhanilkantha Municipality", minRoadWidth: 16 })).toHaveLength(1);
+    expect(applyFilters([listing], { ward: 4 })).toHaveLength(0);
+    expect(applyFilters([listing], { minRoadWidth: 20 })).toHaveLength(0);
+  });
+
+  it("parses a conversational Nepal property query safely without an LLM", () => {
+    expect(parseNaturalLanguageFallback("Buy a three bedroom house in Lalitpur under 3 crore with a 16 ft road")).toMatchObject({ propertyType: "House", listingType: "Sale", location: "Lalitpur", maxPrice: 30000000, minRoadWidth: 16, bedroomsMin: 3 });
+  });
+
+  it("uses the natural-language mutation fallback and bounds returned listings", async () => {
+    mocks.invokeLLM.mockRejectedValueOnce(new Error("LLM unavailable"));
+    mocks.supabaseRest.mockResolvedValueOnce(Array.from({ length: 8 }, (_, index) => ({ ...dbProperty, id: `9a17b2d1-e5c6-4f22-b891-f5df0000000${index + 1}`, slug: `test-kathmandu-residence-${index}`, title: `Test Kathmandu Residence ${index}` })));
+    const result = await appRouter.createCaller(context("user")).properties.naturalLanguageSearch({ query: "house in Kathmandu" });
+    expect(result.propertyIds.length).toBeLessThanOrEqual(MAX_NATURAL_SEARCH_RESULTS);
+    expect(result.properties.length).toBeLessThanOrEqual(MAX_NATURAL_SEARCH_RESULTS);
+  });
+
+  it("highlights differing comparison fields", () => {
+    const first = { ...dbProperty, propertyType: "House", areaSize: "4,100 sq. ft.", price: 32000000 } as any;
+    const second = { ...dbProperty, propertyType: "Apartment", areaSize: "1,650 sq. ft.", price: 19000000 } as any;
+    const keys = getComparisonDifferenceKeys([first, second]);
+    expect(keys.has("price")).toBe(true);
+    expect(keys.has("type")).toBe(true);
+    expect(keys.has("area")).toBe(true);
+  });
+
+  it("limits comparison selection to three and supports removal", () => {
+    expect(toggleComparisonId(["a", "b", "c"], "d")).toEqual(["a", "b", "c"]);
+    expect(toggleComparisonId(["a", "b", "c"], "b")).toEqual(["a", "c"]);
+    expect(toggleComparisonId(["a", "b"], "c")).toEqual(["a", "b", "c"]);
   });
 
   it("surfaces a lead-status update failure to the owner", async () => {

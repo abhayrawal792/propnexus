@@ -22,6 +22,9 @@ export type Property = {
   featured: boolean;
   published: boolean;
   createdAt: string;
+  ward: number;
+  municipality: string;
+  roadWidth: number;
 };
 
 export function formatNpr(value: number, listingType?: Property["listingType"]) {
@@ -58,6 +61,22 @@ export function sortProperties(properties: Property[], sort: PropertySort) {
     if (sort === "type") return left.propertyType.localeCompare(right.propertyType) || left.title.localeCompare(right.title);
     return new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime();
   });
+}
+
+export function getComparisonDifferenceKeys(properties: Property[]) {
+  const values = {
+    price: properties.map(property => property.price),
+    type: properties.map(property => property.propertyType),
+    area: properties.map(property => property.areaSize),
+    bedrooms: properties.map(property => property.bedrooms || 0),
+    status: properties.map(property => property.status),
+  };
+  return new Set(Object.entries(values).filter(([, entries]) => new Set(entries.map(String)).size > 1).map(([key]) => key));
+}
+
+export function toggleComparisonId(ids: string[], propertyId: string, limit = 3) {
+  if (ids.includes(propertyId)) return ids.filter(id => id !== propertyId);
+  return ids.length < limit ? [...ids, propertyId] : ids;
 }
 
 export function getSimilarProperties(property: Property, allProperties: Property[], limit = 3) {

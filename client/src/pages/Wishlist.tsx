@@ -3,7 +3,7 @@ import PublicHeader from "@/components/PublicHeader";
 import PropertyCard from "@/components/PropertyCard";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
-import { formatNpr, Property, sortProperties } from "@/lib/property";
+import { formatNpr, getComparisonDifferenceKeys, Property, sortProperties, toggleComparisonId } from "@/lib/property";
 import { trpc } from "@/lib/trpc";
 import { ArrowLeft, Check, ClipboardCheck, Clock3, Heart, Mail, Scale, Share2, Trash2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -23,7 +23,7 @@ export default function Wishlist() {
   const propertiesQuery = trpc.properties.list.useQuery();
   const [sort, setSort] = useState<WishlistSort>("newest");
   const [priceFilter, setPriceFilter] = useState<(typeof priceFilters)[number]["value"]>("all");
-  const [compareIds, setCompareIds] = useState<string[]>([]);
+  const [compareIds, setCompareIds] = useState<string[]>(() => { const params = new URLSearchParams(window.location.search); const fromUrl = params.get("compare")?.split(",").filter(Boolean) ?? []; if (fromUrl.length) return fromUrl.slice(0, 3); try { return JSON.parse(localStorage.getItem("propnexus_compare_ids") ?? "[]").slice(0, 3); } catch { return []; } });
   const [shareStatus, setShareStatus] = useState<"idle" | "copied">("idle");
   const [emailRecipient, setEmailRecipient] = useState("");
   const [personalMessage, setPersonalMessage] = useState("");
@@ -56,21 +56,12 @@ export default function Wishlist() {
     if (sort === "oldest") return [...filtered].sort((left, right) => new Date(left.createdAt).getTime() - new Date(right.createdAt).getTime());
     return sortProperties(filtered, sort === "newest" ? "newest" : sort);
   }, [savedProperties, priceFilter, sort]);
-  const compareProperties = compareIds.map(id => savedProperties.find(property => property.id === id)).filter((property): property is Property => Boolean(property));
-  const differenceKeys = useMemo(() => {
-    const values = {
-      price: compareProperties.map(property => property.price),
-      type: compareProperties.map(property => property.propertyType),
-      area: compareProperties.map(property => property.areaSize),
-      bedrooms: compareProperties.map(property => property.bedrooms || 0),
-      status: compareProperties.map(property => property.status),
-    };
-    return new Set(Object.entries(values).filter(([, entries]) => new Set(entries.map(String)).size > 1).map(([key]) => key));
-  }, [compareProperties]);
+  const compareProperties = compareIds.map(id => allProperties.find(property => property.id === id)).filter((property): property is Property => Boolean(property));
+  const differenceKeys = useMemo(() => getComparisonDifferenceKeys(compareProperties), [compareProperties]);
   const formatViewedAt = (timestamp: number) => new Date(timestamp).toLocaleString("en-NP", { dateStyle: "medium", timeStyle: "short" });
 
   function toggleCompare(propertyId: string) {
-    setCompareIds(current => current.includes(propertyId) ? current.filter(id => id !== propertyId) : current.length < 3 ? [...current, propertyId] : current);
+    setCompareIds(current => { const next = toggleComparisonId(current, propertyId); localStorage.setItem("propnexus_compare_ids", JSON.stringify(next)); return next; });
   }
 
   return (

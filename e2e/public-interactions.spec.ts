@@ -24,19 +24,25 @@ test("homepage search passes selected discovery criteria to the catalogue", asyn
   await page.locator("#home-location").fill("Budhanilkantha");
   await page.locator("#home-budget").selectOption("30000000");
   await page.locator("#home-sort").selectOption("price-high");
+  await page.locator("#home-municipality").selectOption({ label: "Kathmandu Metropolitan City" });
+  await page.locator("#home-ward").selectOption("3");
+  await page.locator("#home-road-width").selectOption("18");
   await page.getByRole("button", { name: "Search" }).click();
   await expect(page).toHaveURL(/type=House/);
   await expect(page).toHaveURL(/location=Budhanilkantha/);
   await expect(page).toHaveURL(/max=30000000/);
   await expect(page).toHaveURL(/sort=price-high/);
+  await expect(page).toHaveURL(/municipality=Kathmandu\+Metropolitan\+City/);
+  await expect(page).toHaveURL(/ward=3/);
+  await expect(page).toHaveURL(/roadWidth=18/);
 });
 
 test("favorites persist across navigation and can be cleared", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto("/properties");
-  const saveButton = page.locator("article").first().getByRole("button");
+  const saveButton = page.locator("article").first().getByRole("button", { name: /Save .* to favorites/ });
   await saveButton.click();
-  await expect(saveButton).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("article").first().getByRole("button", { name: /Remove .* from favorites/ })).toHaveAttribute("aria-pressed", "true");
   await page.reload();
   await expect(page.locator('button[aria-label^="Remove "]').first()).toBeVisible();
   await page.goto("/properties?favorites=1");
@@ -154,6 +160,37 @@ test("wishlist sorts and filters multiple expanded-catalogue properties", async 
   await expect(page.getByText("New Road Office Building")).not.toBeVisible();
   await page.locator('a[href^="/properties/"]').first().click();
   await expect(page).toHaveURL(/\/properties\//);
+});
+
+test("Nepal-specific location filters narrow the catalogue", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto("/properties");
+  await page.locator("#catalog-municipality").selectOption({ label: "Kathmandu Metropolitan City" });
+  await page.locator("#catalog-ward").selectOption("3");
+  await page.locator("#catalog-road-width").selectOption("18");
+  await expect(page.getByText(/considered properties/)).toBeVisible();
+  await expect(page.locator("#catalog-municipality")).toHaveValue("Kathmandu Metropolitan City");
+  await expect(page.locator("#catalog-ward")).toHaveValue("3");
+  await expect(page.locator("#catalog-road-width")).toHaveValue("18");
+});
+
+test("conversational search exposes interpreted search results or a safe fallback", async ({ page }) => {
+  await page.goto("/");
+  await page.getByLabel("Describe your ideal property").fill("a three bedroom house in Lalitpur under 3 crore");
+  await page.getByRole("button", { name: "Find matches" }).click();
+  await expect(page.getByText(/matching listing|Natural search is temporarily unavailable/)).toBeVisible({ timeout: 20_000 });
+});
+
+test("catalogue comparison workspace caps selection at three and opens side-by-side view", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto("/properties");
+  const cards = page.locator("article");
+  for (let index = 0; index < 3; index += 1) await cards.nth(index).getByRole("button", { name: "Compare" }).click();
+  await expect(page.getByText("3 of 3 listings selected")).toBeVisible();
+  await expect(cards.nth(3).getByRole("button", { name: "Compare limit reached" })).toBeDisabled();
+  await page.getByRole("button", { name: "Compare side by side" }).click();
+  await expect(page).toHaveURL(/\/wishlist\?compare=/);
+  await expect(page.getByRole("heading", { name: "Compare saved properties" })).toBeVisible();
 });
 
 test("Why PropNexus from the catalogue returns to the homepage section without blanking", async ({ page }) => {

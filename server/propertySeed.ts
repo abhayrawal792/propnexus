@@ -22,6 +22,9 @@ export type PropertyRecord = {
   featured: boolean;
   published: boolean;
   createdAt: string;
+  ward: number;
+  municipality: string;
+  roadWidth: number;
 };
 
 const images = {
@@ -53,6 +56,8 @@ export const seedProperties: PropertyRecord[] = details.map((detail, index) => {
   const featuredImage = imageCycle[index % imageCycle.length];
   const isRental = index === 4 || index === 5;
   const status = index === 7 ? "Under Offer" : "Available";
+  const municipalities = ["Budhanilkantha Municipality", "Kathmandu Metropolitan City", "Kathmandu Metropolitan City", "Lalitpur Metropolitan City", "Kathmandu Metropolitan City", "Kathmandu Metropolitan City", "Godawari Municipality", "Tokha Municipality", "Kathmandu Metropolitan City", "Lalitpur Metropolitan City", "Kirtipur Municipality", "Bharatpur Metropolitan City"];
+  const wards = [3, 3, 2, 25, 4, 30, 15, 5, 26, 16, 7, 10];
 
   return {
     id: `demo-${index + 1}`,
@@ -78,5 +83,8 @@ export const seedProperties: PropertyRecord[] = details.map((detail, index) => {
     featured: index < 6,
     published: true,
     createdAt: new Date(Date.now() - index * 86400000 * 6).toISOString(),
+    ward: wards[index] ?? 0,
+    municipality: municipalities[index] ?? (index === 11 ? "Chitwan Municipality" : "Kathmandu Metropolitan City"),
+    roadWidth: Number.parseInt(roadAccess.match(/\d+/)?.[0] ?? "0", 10),
   };
 });
