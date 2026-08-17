@@ -253,3 +253,5 @@
 - [x] Fix the latest Vercel TypeScript errors for Express app methods, response cookies, request headers, and implicit middleware parameters.
 
 - [ ] Fix the production homepage regression where the mobile menu is missing and property data appears blank on propnexus-delta.vercel.app.
+
+- [x] Audit the public GitHub repository for complete frontend, backend, migrations, configuration, and test synchronization and provide repository/checkpoint download links.
