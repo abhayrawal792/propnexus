@@ -116,3 +116,52 @@ test("property photography opens in a responsive full-screen viewer", async ({ p
   await page.getByRole("button", { name: "Close photography viewer" }).click();
   await expect(page.getByRole("dialog", { name: /photography viewer/ })).not.toBeVisible();
 });
+
+
+test("expanded catalogue filters, map view, and detail links work with 16 live listings", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto("/properties");
+  await expect(page.getByText("16 considered properties")).toBeVisible();
+  const typeControl = page.getByRole("button", { name: "Apartment", exact: true }).first();
+  await typeControl.click();
+  await expect(page.getByText("4 considered properties")).toBeVisible();
+  await expect(page.locator("article")).toHaveCount(4);
+  await page.getByRole("button", { name: "All", exact: true }).first().click();
+  await page.getByRole("button", { name: "Map" }).click();
+  await expect(page.getByRole("group", { name: "Property catalogue view" }).getByRole("button", { name: "Map" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator('a[href^="/properties/"]')).toHaveCount(6);
+  await page.locator('a[href^="/properties/"]').first().click();
+  await expect(page).toHaveURL(/\/properties\//);
+  await expect(page.getByRole("main")).toBeVisible();
+});
+
+test("wishlist sorts and filters multiple expanded-catalogue properties", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  await page.goto("/properties");
+  const lowerCard = page.locator("article").filter({ hasText: "Bhaktapur Residential Plot" }).first();
+  const higherCard = page.locator("article").filter({ hasText: "New Road Office Building" }).first();
+  await expect(lowerCard).toBeVisible();
+  await expect(higherCard).toBeVisible();
+  await lowerCard.getByRole("button", { name: /Save .* to favorites/ }).click();
+  await higherCard.getByRole("button", { name: /Save .* to favorites/ }).click();
+  await page.goto("/wishlist");
+  await expect(page.getByText("Bhaktapur Residential Plot")).toBeVisible();
+  await expect(page.getByText("New Road Office Building")).toBeVisible();
+  await page.locator("#wishlist-sort").selectOption("price-low");
+  await expect(page.locator("article").first()).toContainText("Bhaktapur Residential Plot");
+  await page.locator("#wishlist-price").selectOption("30000000");
+  await expect(page.getByText("Bhaktapur Residential Plot")).toBeVisible();
+  await expect(page.getByText("New Road Office Building")).not.toBeVisible();
+  await page.locator('a[href^="/properties/"]').first().click();
+  await expect(page).toHaveURL(/\/properties\//);
+});
+
+test("Why PropNexus from the catalogue returns to the homepage section without blanking", async ({ page }) => {
+  await page.goto("/properties");
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.getByLabel("Open navigation menu").click();
+  await page.getByRole("link", { name: "Why PropNexus" }).click();
+  await expect(page).toHaveURL(/\/$|#why-propnexus/);
+  await expect(page.locator("#why-propnexus")).toBeVisible();
+  await expect(page.locator("body")).not.toContainText("Page not found");
+});

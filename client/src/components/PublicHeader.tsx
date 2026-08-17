@@ -55,12 +55,14 @@ export default function PublicHeader() {
 
   function navigateSection(hash: string) {
     setMenuOpen(false);
+    const scrollToSection = () => document.querySelector(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
     if (window.location.pathname === "/") {
-      const scrollToSection = () => document.querySelector(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
       window.setTimeout(scrollToSection, 80);
       window.setTimeout(scrollToSection, 650);
     } else {
-      setLocation(`/${hash}`);
+      setLocation("/");
+      window.setTimeout(scrollToSection, 120);
+      window.setTimeout(scrollToSection, 700);
     }
   }
 

@@ -139,3 +139,29 @@
 - [x] Re-run mobile responsive verification after the final Playwright regression and Wishlist selector fix.
 - [x] Generate and deliver the concise final summary report covering implementation, GitHub status, tests, and operational notes.
 - [x] Deliver the final summary report to the user with the verified GitHub status and test results.
+
+- [x] Reproduce and fix the reported click interaction that makes the page disappear.
+- [x] Add regression coverage for the repaired interaction and save an updated checkpoint.
+
+- [x] Scan current browser/server logs and reproduce the reported errors across core public flows.
+- [x] Fix confirmed runtime, navigation, or interaction errors and add regression coverage.
+- [x] Run final TypeScript, Vitest, Playwright, and responsive checks after the fixes.
+
+- [x] Audit the current property count, distinct listing identities, and image reuse across the catalogue.
+- [x] Expand the catalogue with additional distinct Nepal property listings using transparent listing metadata.
+- [x] Assign varied managed-storage photography so properties do not all reuse the same images.
+- [x] Validate catalogue counts, filters, map markers, and responsive presentation after the expansion.
+
+- [x] Reproduce and fix the blank Why PropNexus navigation route on desktop and mobile.
+- [x] Add regression coverage for Why PropNexus navigation and verify all public routes remain rendered.
+
+- [x] Audit current property categories, counts, area values, prices, and image reuse.
+- [x] Provide at least four distinct listings in every available category, including land/plot and building-related types.
+- [x] Use varied Nepal locations, areas, prices, titles, descriptions, and photography assignments without fabricating reviews or testimonials.
+- [x] Validate category filters, map markers, detail routes, wishlist behavior, and responsive catalogue presentation.
+- [x] Final catalogue expansion audit: verify 4+ distinct listings per property category and non-repeating featured photography across the public catalogue.
+- [x] Verify comparison Email PDF custom-message flow after catalogue expansion.
+- [x] Save final checkpoint after final audit.
+- [x] Run post-expansion browser regression for catalogue filters, map view, detail links, and wishlist behavior.
+- [x] Add explicit post-expansion wishlist-page verification for saved items, sorting, filtering, and detail navigation.
+- [x] Assert actual wishlist sort order and price-filter result changes with multiple expanded-catalogue properties.

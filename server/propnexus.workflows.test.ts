@@ -7,6 +7,7 @@ const mocks = vi.hoisted(() => ({
   storagePut: vi.fn(),
   notifyOwner: vi.fn(),
   sendOwnerInquiryEmail: vi.fn(),
+  sendComparisonPdfEmail: vi.fn(),
 }));
 
 vi.mock("./supabase", () => ({
@@ -24,6 +25,10 @@ vi.mock("./_core/notification", () => ({
 
 vi.mock("./_core/email", () => ({
   sendOwnerInquiryEmail: mocks.sendOwnerInquiryEmail,
+}));
+
+vi.mock("./_core/comparisonEmail", () => ({
+  sendComparisonPdfEmail: mocks.sendComparisonPdfEmail,
 }));
 
 import { appRouter } from "./routers";
@@ -229,6 +234,17 @@ describe("PropNexus workflows", () => {
     const result = await appRouter.createCaller(context("user")).properties.list();
     expect(result).toHaveLength(1);
     expect(result[0]).toMatchObject({ title: dbProperty.title, propertyType: "House", imageUrls: dbProperty.image_urls });
+  });
+
+  it("forwards a custom personal message when emailing a comparison PDF", async () => {
+    mocks.sendComparisonPdfEmail.mockResolvedValueOnce(true);
+    const result = await appRouter.createCaller(context("user")).comparison.emailPdf({
+      recipient: "family@example.com",
+      personalMessage: "Please review the Pokhara option first.",
+      properties: [{ title: "Test Kathmandu Residence", location: "Budhanilkantha", city: "Kathmandu", price: "Rs. 3.25 crore", propertyType: "House", areaSize: "4,100 sq. ft.", bedrooms: 5, status: "Available" }],
+    });
+    expect(result).toEqual({ success: true });
+    expect(mocks.sendComparisonPdfEmail).toHaveBeenCalledWith("family@example.com", expect.any(Array), "Please review the Pokhara option first.");
   });
 
   it("creates an inquiry, saves the expected Supabase payload, and alerts the owner", async () => {
