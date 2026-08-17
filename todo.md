@@ -238,6 +238,6 @@
 - [x] Adapt the Express/tRPC backend for Vercel serverless execution with an exported request handler and preserve the existing local server runtime.
 - [x] Add and validate Vercel configuration for the full-stack build without exposing Supabase secrets.
 
-- [ ] Document Supabase connection, initial migration, Vercel environment setup, and post-deployment database verification steps for the user.
+- [x] Document Supabase connection, initial migration, Vercel environment setup, and post-deployment database verification steps for the user.
 
 - [x] Diagnose and fix the Vercel deployment bundle if it still starts the local Express listener instead of exporting the serverless handler.
