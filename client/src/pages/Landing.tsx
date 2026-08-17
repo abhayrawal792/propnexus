@@ -11,7 +11,7 @@ import { ArrowDownRight, ArrowUpRight, Building2, CheckCircle2, ChevronRight, Li
 import { useMemo, useState } from "react";
 import { Link, useLocation } from "wouter";
 
-const heroImage = "/manus-storage/hillside-house_152b67cb.png";
+const heroImage = "/manus-storage/hillside-house_12efa2e1.png";
 
 export default function Landing() {
   const [, setLocation] = useLocation();

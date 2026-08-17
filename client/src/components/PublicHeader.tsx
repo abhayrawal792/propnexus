@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { FormEvent, useEffect, useState } from "react";
 import { useFavorites } from "@/hooks/useFavorites";
 
-const LOGO_URL = "/manus-storage/propnexus-logo-clean_2e81583e.png";
+const LOGO_URL = "/manus-storage/propnexus-logo_660454fb.webp";
 const WHATSAPP_NUMBER = "9779769279600";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=Hello%20Abhay%2C%20I%20would%20like%20to%20enquire%20about%20a%20PropNexus%20property.`;
 
