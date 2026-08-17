@@ -195,3 +195,12 @@
 - [x] Run final type, unit, browser, and responsive checks and save a new checkpoint.
 - [x] Stabilize AI example-query browser setup with a rendered-section wait.
 - [x] Set desktop viewport for saved-search browser coverage so catalogue controls are visible.
+
+## New feature request: saved-search names, QR sharing, and query history
+
+- [x] Let users enter a custom name when saving a catalogue search and preserve the name across reloads.
+- [x] Add a QR-code export action for comparison share URLs with accessible dialog/download behavior.
+- [x] Store recent AI conversational queries locally with a reusable history dropdown and clear-history action.
+- [x] Add Vitest and Playwright coverage for custom names, QR export, and query history.
+- [x] Run final type, unit, browser, build, and responsive checks and save a new checkpoint.
+- [x] Narrow the query-history browser assertion to distinguish history results from example-query buttons.

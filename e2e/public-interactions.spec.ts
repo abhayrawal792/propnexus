@@ -208,10 +208,23 @@ test("catalogue saves and reloads the current search criteria locally", async ({
   await page.goto("/properties");
   await page.getByRole("button", { name: "Apartment", exact: true }).first().click();
   await page.getByRole("button", { name: "Save search" }).click();
+  await page.getByLabel("Name this saved search").fill("Kathmandu family shortlist");
+  await page.getByRole("button", { name: "Save named search" }).click();
   await expect(page.getByText("Saved searches (1)")).toBeVisible();
   await page.reload();
   await page.locator("summary").filter({ hasText: "Saved searches" }).click();
-  await expect(page.getByText(/Apartment ·/)).toBeVisible();
+  await expect(page.getByText("Kathmandu family shortlist")).toBeVisible();
+});
+
+test("AI query history reuses and clears recent conversational searches", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("heading", { name: "Tell us what you are looking for." })).toBeVisible({ timeout: 10_000 });
+  await page.getByRole("group", { name: "Example property searches" }).getByRole("button").first().click();
+  await expect(page.getByText(/Recent searches \(1\)/)).toBeVisible({ timeout: 10_000 });
+  await page.getByText("Recent searches (1)").click();
+  await expect(page.locator("details").getByRole("button", { name: /family house in Lalitpur/ })).toBeVisible();
+  await page.getByRole("button", { name: "Clear history" }).click();
+  await expect(page.getByText(/Recent searches/)).not.toBeVisible();
 });
 
 test("comparison view copies a shareable comparison link", async ({ page }) => {
@@ -223,6 +236,9 @@ test("comparison view copies a shareable comparison link", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Compare saved properties" })).toBeVisible();
   await page.getByRole("button", { name: "Share comparison" }).click();
   await expect(page.getByRole("button", { name: "Comparison link copied" })).toBeVisible();
+  await page.getByRole("button", { name: "QR code" }).click();
+  await expect(page.getByRole("dialog", { name: "Share comparison" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Download QR code" })).toHaveAttribute("download", "propnexus-comparison-qr.png");
 });
 
 test("Why PropNexus from the catalogue returns to the homepage section without blanking", async ({ page }) => {

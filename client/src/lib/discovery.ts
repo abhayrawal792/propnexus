@@ -1,5 +1,6 @@
 export const SAVED_SEARCHES_KEY = "propnexus_saved_searches";
 export const COMPARISON_SHARE_PARAM = "compare";
+export const AI_QUERY_HISTORY_KEY = "propnexus_ai_query_history";
 export const GUIDED_SEARCH_EXAMPLES = [
   "A family house in Lalitpur under 3 crore",
   "A 16 ft road plot near Kathmandu",
@@ -19,6 +20,21 @@ export type SavedSearchCriteria = {
 };
 
 export type SavedSearch = { id: string; label: string; criteria: SavedSearchCriteria };
+
+export function parseQueryHistory(raw: string | null): string[] {
+  if (!raw) return [];
+  try { const parsed = JSON.parse(raw); return Array.isArray(parsed) ? parsed.filter(item => typeof item === "string" && item.trim()).slice(0, 5) : []; } catch { return []; }
+}
+
+export function serializeQueryHistory(queries: string[]) {
+  return JSON.stringify(queries.filter(Boolean).slice(0, 5));
+}
+
+export function addQueryToHistory(queries: string[], query: string) {
+  const normalized = query.trim();
+  if (!normalized) return queries;
+  return [normalized, ...queries.filter(item => item.toLowerCase() !== normalized.toLowerCase())].slice(0, 5);
+}
 
 export function parseSavedSearches(raw: string | null): SavedSearch[] {
   if (!raw) return [];

@@ -40,7 +40,7 @@ import { appRouter } from "./routers";
 import { getComparisonDifferenceKeys, getSimilarProperties, resolveGalleryState, sanitizePropertyImages, sortProperties, type Property } from "../client/src/lib/property";
 import { FAVORITES_STORAGE_KEY, parseFavoriteIds, readFavoriteIds, saveFavoriteIds } from "../client/src/hooks/useFavorites";
 import { toggleComparisonId } from "../client/src/lib/property";
-import { buildComparisonShareUrl, GUIDED_SEARCH_EXAMPLES, parseComparisonIds, parseSavedSearches, serializeSavedSearches, type SavedSearch } from "../client/src/lib/discovery";
+import { addQueryToHistory, buildComparisonShareUrl, GUIDED_SEARCH_EXAMPLES, parseComparisonIds, parseQueryHistory, parseSavedSearches, serializeQueryHistory, serializeSavedSearches, type SavedSearch } from "../client/src/lib/discovery";
 import { applyFilters, MAX_NATURAL_SEARCH_RESULTS, parseNaturalLanguageFallback } from "./routers/properties";
 
 const dbProperty = {
@@ -351,6 +351,13 @@ describe("PropNexus workflows", () => {
     const url = buildComparisonShareUrl("https://propnexus.example", ["a", "b", "c", "d"]);
     expect(url).toContain("compare=a%2Cb%2Cc");
     expect(parseComparisonIds(new URL(url).search)).toEqual(["a", "b", "c"]);
+  });
+
+  it("stores recent conversational queries with deduplication and a five-item cap", () => {
+    const history = addQueryToHistory(["Older query"], "A house in Lalitpur");
+    expect(addQueryToHistory(history, "a HOUSE in lalitpur")).toEqual(["a HOUSE in lalitpur", "Older query"]);
+    const bounded = addQueryToHistory(["one", "two", "three", "four", "five"], "six");
+    expect(parseQueryHistory(serializeQueryHistory(bounded))).toEqual(["six", "one", "two", "three", "four"]);
   });
 
   it("keeps three guided search examples available as a stable contract", () => {
