@@ -255,3 +255,5 @@
 - [ ] Fix the production homepage regression where the mobile menu is missing and property data appears blank on propnexus-delta.vercel.app.
 
 - [x] Audit the public GitHub repository for complete frontend, backend, migrations, configuration, and test synchronization and provide repository/checkpoint download links.
+
+- [x] Fix the live Vercel HTTP 500 from the properties API after the explicit serverless routes began resolving.

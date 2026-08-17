@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { PropertyRecord, seedProperties } from "../propertySeed";
-import { isSchemaUnavailable, supabaseRest } from "../supabase";
+import { isSchemaUnavailable, SupabaseRestError, supabaseRest } from "../supabase";
 import { publicProcedure, router } from "../_core/trpc";
 import { adminProcedure } from "./_shared";
 import { resolvePropertyLocationMetadata, NEPAL_MUNICIPALITIES } from "../../shared/propertyMetadata";
@@ -112,7 +112,7 @@ async function listProperties(includeUnpublished = false) {
     const rows = await supabaseRest<SupabaseProperty[]>(`properties?select=*&order=created_at.desc${visibility}`);
     return rows.map(mapProperty);
   } catch (error) {
-    if (isSchemaUnavailable(error)) return seedProperties;
+    if (isSchemaUnavailable(error) || (error instanceof SupabaseRestError && error.status === 503)) return seedProperties;
     throw error;
   }
 }
