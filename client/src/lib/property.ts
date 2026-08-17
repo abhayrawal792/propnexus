@@ -1,3 +1,5 @@
+export type PriceHistoryPoint = { date: string; price: number; verified?: boolean };
+
 export type Property = {
   id: string;
   title: string;
@@ -25,7 +27,13 @@ export type Property = {
   ward: number;
   municipality: string;
   roadWidth: number;
+  priceHistory?: PriceHistoryPoint[];
 };
+
+export function getVerifiedPriceHistory(property: Pick<Property, "price" | "createdAt" | "priceHistory">) {
+  const points = (property.priceHistory ?? []).filter(point => point.verified !== false && Number.isFinite(point.price) && Boolean(point.date));
+  return points.length ? points.sort((a, b) => a.date.localeCompare(b.date)) : [];
+}
 
 export function formatNpr(value: number, listingType?: Property["listingType"]) {
   const amount = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(value);

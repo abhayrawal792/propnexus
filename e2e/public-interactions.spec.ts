@@ -109,6 +109,25 @@ test("homepage suggestions filter by location, price, and sort order", async ({ 
   await expect(page.locator("#suggested-sort")).toHaveValue("price-low");
 });
 
+test("search results map toggle exposes municipality-aware property navigation", async ({ page }) => {
+  await page.goto("/properties");
+  await expect(page.getByRole("group", { name: "Property catalogue view" })).toBeVisible();
+  await page.getByRole("group", { name: "Property catalogue view" }).getByRole("button", { name: "Map" }).click();
+  await expect(page.getByRole("group", { name: "Property catalogue view" }).getByRole("button", { name: "Map" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator('a[href^="/properties/"]')).toHaveCount(6);
+});
+
+test("property detail exposes price history state and Contact Agent drafting controls", async ({ page }) => {
+  await page.goto("/properties");
+  await page.locator('a[href^="/properties/"]').first().click();
+  await expect(page.getByRole("heading", { name: "Verified pricing timeline" })).toBeVisible();
+  await page.getByRole("button", { name: "Contact agent" }).click();
+  await expect(page.getByRole("dialog", { name: /Ask about/ })).toBeVisible();
+  await page.getByLabel("What would you like to ask?").fill("I would like to arrange a weekend viewing.");
+  await page.getByRole("button", { name: "Draft with AI" }).click();
+  await expect(page.getByRole("textbox", { name: "Message", exact: true })).toHaveValue(/Hello Abhay|viewing|property/i, { timeout: 10_000 });
+});
+
 test("property photography opens in a responsive full-screen viewer", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/properties");

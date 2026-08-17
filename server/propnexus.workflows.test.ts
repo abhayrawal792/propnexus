@@ -37,7 +37,7 @@ vi.mock("./_core/llm", () => ({
 }));
 
 import { appRouter } from "./routers";
-import { getComparisonDifferenceKeys, getSimilarProperties, resolveGalleryState, sanitizePropertyImages, sortProperties, type Property } from "../client/src/lib/property";
+import { getComparisonDifferenceKeys, getSimilarProperties, getVerifiedPriceHistory, resolveGalleryState, sanitizePropertyImages, sortProperties, type Property } from "../client/src/lib/property";
 import { FAVORITES_STORAGE_KEY, parseFavoriteIds, readFavoriteIds, saveFavoriteIds } from "../client/src/hooks/useFavorites";
 import { toggleComparisonId } from "../client/src/lib/property";
 import { addQueryToHistory, buildComparisonShareUrl, GUIDED_SEARCH_EXAMPLES, parseComparisonIds, parseQueryHistory, parseSavedSearches, serializeQueryHistory, serializeSavedSearches, type SavedSearch } from "../client/src/lib/discovery";
@@ -359,6 +359,12 @@ describe("PropNexus workflows", () => {
     expect(addQueryToHistory(history, "a HOUSE in lalitpur")).toEqual(["a HOUSE in lalitpur", "Older query"]);
     const bounded = addQueryToHistory(["one", "two", "three", "four", "five"], "six");
     expect(parseQueryHistory(serializeQueryHistory(bounded))).toEqual(["six", "one", "two", "three", "four"]);
+  });
+
+  it("only exposes verified price-history points and leaves unverified listings without a chart", () => {
+    const property = { price: 10000000, createdAt: "2026-01-01T00:00:00.000Z", priceHistory: [{ date: "2025-01-01", price: 9000000, verified: false }, { date: "2026-01-01", price: 10000000, verified: true }] } as Property;
+    expect(getVerifiedPriceHistory(property)).toEqual([{ date: "2026-01-01", price: 10000000, verified: true }]);
+    expect(getVerifiedPriceHistory({ price: 10000000, createdAt: "2026-01-01T00:00:00.000Z" })).toEqual([]);
   });
 
   it("exposes authenticated sync procedures for saved searches and AI history", () => {

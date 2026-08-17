@@ -4,6 +4,7 @@ import { sendOwnerInquiryEmail } from "../_core/email";
 import { z } from "zod";
 import { isSchemaUnavailable, supabaseRest } from "../supabase";
 import { publicProcedure, router } from "../_core/trpc";
+import { invokeLLM } from "../_core/llm";
 import { adminProcedure } from "./_shared";
 
 const inquiryInput = z.object({
@@ -15,6 +16,24 @@ const inquiryInput = z.object({
 });
 
 export const inquiriesRouter = router({
+  draftMessage: publicProcedure.input(z.object({ propertyTitle: z.string().min(1).max(160), propertyLocation: z.string().min(1).max(160), intent: z.string().max(240).optional() })).mutation(async ({ input }) => {
+    const fallback = `Hello Abhay, I am interested in ${input.propertyTitle} in ${input.propertyLocation}. ${input.intent?.trim() || "Could you please share the current availability, documentation, and viewing options?"} Thank you.`;
+    try {
+      const response = await invokeLLM({
+        messages: [
+          { role: "system", content: "Draft a concise, polite real-estate inquiry for a Nepal property advisor. Return only JSON with one field named message. Do not make claims about availability, price changes, or documents; ask the advisor to confirm them." },
+          { role: "user", content: `Property: ${input.propertyTitle}\nLocation: ${input.propertyLocation}\nVisitor intent: ${input.intent || "Interested in learning more"}` },
+        ],
+        outputSchema: { name: "inquiry_draft", schema: { type: "object", properties: { message: { type: "string", minLength: 20, maxLength: 700 } }, required: ["message"], additionalProperties: false }, strict: true },
+      });
+      const content = response?.choices?.[0]?.message?.content;
+      if (typeof content === "string") {
+        const parsed = JSON.parse(content) as { message?: unknown };
+        if (typeof parsed.message === "string" && parsed.message.trim().length >= 20) return { message: parsed.message.trim(), source: "ai" as const };
+      }
+    } catch (error) { console.warn("[Inquiry] AI draft unavailable; using deterministic fallback", error); }
+    return { message: fallback, source: "fallback" as const };
+  }),
   create: publicProcedure.input(inquiryInput).mutation(async ({ input }) => {
     try {
       await supabaseRest("inquiries", {

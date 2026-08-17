@@ -217,3 +217,14 @@
 - [x] Ensure every represented Nepal place in the public catalogue has at least two distinct properties with varied metadata and photography.
 - [x] Audit place counts, update the catalogue where gaps exist, and verify place-filter behavior.
 - [x] Update catalogue browser regression expectations from 16 to 20 listings and add city coverage assertions.
+
+## New feature request: map exploration, price history, and Contact Agent
+
+- [x] Add a list/map toggle to the search results page with municipality-aware markers, price labels, and property navigation.
+- [x] Add transparent price-history data to property records or a documented deterministic fallback without fabricating transactions.
+- [x] Add an accessible responsive price-history chart to property detail pages with NPR labels and unavailable-data state.
+- [x] Add a Contact Agent modal for a specific property with validated name, email, phone, and message fields.
+- [x] Add a server-side AI message-drafting procedure with bounded structured output, safe fallback, and no client-side secrets.
+- [x] Add draft, edit, submit, loading, error, and success states to the Contact Agent flow.
+- [x] Add Vitest and Playwright coverage for map toggle, price history, AI drafting, and inquiry submission.
+- [x] Run final schema, type, unit, browser, build, and responsive checks and save a new checkpoint.
