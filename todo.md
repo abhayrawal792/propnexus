@@ -250,4 +250,4 @@
 
 - [ ] Fix the remaining Vercel asset delivery failure so the live logo, hero, and property images no longer return 404.
 
-- [ ] Fix the latest Vercel TypeScript errors for Express app methods, response cookies, request headers, and implicit middleware parameters.
+- [x] Fix the latest Vercel TypeScript errors for Express app methods, response cookies, request headers, and implicit middleware parameters.
