@@ -6,6 +6,7 @@ import { inquiriesRouter } from "./routers/inquiries";
 import { mediaRouter } from "./routers/media";
 import { propertiesRouter } from "./routers/properties";
 import { comparisonRouter } from "./routers/comparison";
+import { syncRouter } from "./routers/sync";
 
 export const appRouter = router({
   system: systemRouter,
@@ -21,6 +22,7 @@ export const appRouter = router({
   inquiries: inquiriesRouter,
   media: mediaRouter,
   comparison: comparisonRouter,
+  sync: syncRouter,
 });
 
 export type AppRouter = typeof appRouter;

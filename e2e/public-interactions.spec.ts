@@ -217,6 +217,10 @@ test("catalogue saves and reloads the current search criteria locally", async ({
   await page.reload();
   await page.locator("summary").filter({ hasText: "Saved searches" }).click();
   await expect(page.getByText("Kathmandu family shortlist")).toBeVisible();
+  await page.getByRole("button", { name: "Rename saved search Kathmandu family shortlist" }).click();
+  await page.getByLabel("Rename saved search").fill("Renamed Kathmandu shortlist");
+  await page.getByRole("button", { name: "Save renamed search" }).click();
+  await expect(page.getByText("Renamed Kathmandu shortlist")).toBeVisible();
 });
 
 test("AI query history reuses and clears recent conversational searches", async ({ page }) => {
@@ -241,6 +245,7 @@ test("comparison view copies a shareable comparison link", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Comparison link copied" })).toBeVisible();
   await page.getByRole("button", { name: "QR code" }).click();
   await expect(page.getByRole("dialog", { name: "Share comparison" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Share QR code" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Download QR code" })).toHaveAttribute("download", "propnexus-comparison-qr.png");
 });
 

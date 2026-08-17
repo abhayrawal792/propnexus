@@ -42,6 +42,7 @@ import { FAVORITES_STORAGE_KEY, parseFavoriteIds, readFavoriteIds, saveFavoriteI
 import { toggleComparisonId } from "../client/src/lib/property";
 import { addQueryToHistory, buildComparisonShareUrl, GUIDED_SEARCH_EXAMPLES, parseComparisonIds, parseQueryHistory, parseSavedSearches, serializeQueryHistory, serializeSavedSearches, type SavedSearch } from "../client/src/lib/discovery";
 import { applyFilters, MAX_NATURAL_SEARCH_RESULTS, parseNaturalLanguageFallback } from "./routers/properties";
+import { syncRouter } from "./routers/sync";
 
 const dbProperty = {
   id: "9a17b2d1-e5c6-4f22-b891-f5df00000001",
@@ -358,6 +359,11 @@ describe("PropNexus workflows", () => {
     expect(addQueryToHistory(history, "a HOUSE in lalitpur")).toEqual(["a HOUSE in lalitpur", "Older query"]);
     const bounded = addQueryToHistory(["one", "two", "three", "four", "five"], "six");
     expect(parseQueryHistory(serializeQueryHistory(bounded))).toEqual(["six", "one", "two", "three", "four"]);
+  });
+
+  it("exposes authenticated sync procedures for saved searches and AI history", () => {
+    const procedures = syncRouter._def.procedures;
+    expect(Object.keys(procedures)).toEqual(expect.arrayContaining(["savedSearches", "upsertSavedSearch", "deleteSavedSearch", "queryHistory", "upsertQuery", "clearQueryHistory"]));
   });
 
   it("keeps three guided search examples available as a stable contract", () => {

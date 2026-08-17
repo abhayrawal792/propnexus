@@ -207,13 +207,13 @@
 
 ## New feature request: sync, native sharing, and saved-search editing
 
-- [ ] Add a user-owned persistence model for saved searches and AI query history with schema-first migration and server authorization.
-- [ ] Add signed-in sync procedures with safe local-to-server merge behavior and graceful signed-out fallback.
-- [ ] Sync saved searches and AI query history across devices when a user is authenticated.
-- [ ] Add inline edit and rename controls for saved searches with persistence and cancellation.
-- [ ] Add native Web Share API support for the comparison QR image/link with clipboard/download fallback.
-- [ ] Add Vitest and Playwright coverage for sync, editing, and native-share fallback behavior.
-- [ ] Run final schema, type, unit, browser, build, and responsive checks and save a new checkpoint.
+- [x] Add a user-owned persistence model for saved searches and AI query history with schema-first migration and server authorization.
+- [x] Add signed-in sync procedures with safe local-to-server merge behavior and graceful signed-out fallback.
+- [x] Sync saved searches and AI query history across devices when a user is authenticated.
+- [x] Add inline edit and rename controls for saved searches with persistence and cancellation.
+- [x] Add native Web Share API support for the comparison QR image/link with clipboard/download fallback.
+- [x] Add Vitest and Playwright coverage for sync, editing, and native-share fallback behavior.
+- [x] Run final schema, type, unit, browser, build, and responsive checks and save a new checkpoint.
 - [x] Ensure every represented Nepal place in the public catalogue has at least two distinct properties with varied metadata and photography.
 - [x] Audit place counts, update the catalogue where gaps exist, and verify place-filter behavior.
 - [x] Update catalogue browser regression expectations from 16 to 20 listings and add city coverage assertions.
